@@ -52,12 +52,19 @@
     text-transform: uppercase;
   }
 
-  /* Language Toggle */
-  .lang-toggle {
+  /* Top Bar: Language + Auth */
+  .top-bar {
     display: flex;
     justify-content: center;
-    gap: 0;
+    align-items: center;
+    gap: 16px;
     margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .lang-toggle {
+    display: flex;
+    gap: 0;
   }
 
   .lang-btn {
@@ -80,6 +87,79 @@
     background: rgba(99,102,241,0.2);
     color: #a5b4fc;
     border-color: #6366f1;
+  }
+
+  /* Auth UI */
+  .auth-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .auth-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    color: #94a3b8;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .auth-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+    color: #e2e8f0;
+  }
+
+  .auth-btn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .user-info {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: #94a3b8;
+  }
+
+  .user-info.show { display: flex; }
+
+  .user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .user-name {
+    font-weight: 600;
+    color: #c7d2fe;
+  }
+
+  .logout-btn {
+    padding: 3px 10px;
+    border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 6px;
+    background: transparent;
+    color: #f87171;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .logout-btn:hover {
+    background: rgba(248,113,113,0.1);
   }
 
   /* Language display control */
@@ -178,7 +258,6 @@
     position: relative;
   }
 
-  /* Vertical Line */
   .pipeline::before {
     content: '';
     position: absolute;
@@ -281,32 +360,26 @@
   }
 
   /* Color coding */
-  .color-edit { --accent: #818cf8; }
   .color-edit .step-dot { background: #818cf8; border-color: #6366f1; box-shadow: 0 0 12px rgba(129,140,248,0.4); }
   .color-edit .step-title { color: #c7d2fe; }
   .color-edit .step-person { background: rgba(129,140,248,0.12); color: #a5b4fc; }
 
-  .color-color { --accent: #f472b6; }
   .color-color .step-dot { background: #f472b6; border-color: #ec4899; box-shadow: 0 0 12px rgba(244,114,182,0.4); }
   .color-color .step-title { color: #fbcfe8; }
   .color-color .step-person { background: rgba(244,114,182,0.12); color: #f9a8d4; }
 
-  .color-vfx { --accent: #34d399; }
   .color-vfx .step-dot { background: #34d399; border-color: #10b981; box-shadow: 0 0 12px rgba(52,211,153,0.4); }
   .color-vfx .step-title { color: #a7f3d0; }
   .color-vfx .step-person { background: rgba(52,211,153,0.12); color: #6ee7b7; }
 
-  .color-conform { --accent: #fbbf24; }
   .color-conform .step-dot { background: #fbbf24; border-color: #f59e0b; box-shadow: 0 0 12px rgba(251,191,36,0.4); }
   .color-conform .step-title { color: #fde68a; }
   .color-conform .step-person { background: rgba(251,191,36,0.12); color: #fcd34d; }
 
-  .color-deliver { --accent: #38bdf8; }
   .color-deliver .step-dot { background: #38bdf8; border-color: #0ea5e9; box-shadow: 0 0 12px rgba(56,189,248,0.4); }
   .color-deliver .step-title { color: #bae6fd; }
   .color-deliver .step-person { background: rgba(56,189,248,0.12); color: #7dd3fc; }
 
-  .color-problem { --accent: #f87171; }
   .color-problem .step-dot { background: #f87171; border-color: #ef4444; box-shadow: 0 0 12px rgba(248,113,113,0.5); }
   .color-problem .step-title { color: #fecaca; }
   .color-problem .step-person { background: rgba(248,113,113,0.12); color: #fca5a5; }
@@ -339,20 +412,9 @@
     color: #c7d2fe;
   }
 
-  .alert-box h3 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .alert-box ul {
-    padding-left: 18px;
-    margin-top: 8px;
-  }
-
-  .alert-box li {
-    margin-bottom: 4px;
-  }
+  .alert-box h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+  .alert-box ul { padding-left: 18px; margin-top: 8px; }
+  .alert-box li { margin-bottom: 4px; }
 
   /* Resolution Table */
   .res-table {
@@ -383,15 +445,12 @@
     color: #94a3b8;
   }
 
-  .res-table tr:hover td {
-    background: rgba(255,255,255,0.02);
-  }
+  .res-table tr:hover td { background: rgba(255,255,255,0.02); }
 
   .highlight { color: #fbbf24; font-weight: 600; }
   .good { color: #34d399; }
   .bad { color: #f87171; }
 
-  /* Section Title */
   .section-title {
     text-align: center;
     padding: 30px 20px 10px;
@@ -407,7 +466,6 @@
     margin-bottom: 30px;
   }
 
-  /* Comparison boxes */
   .compare-grid {
     max-width: 860px;
     margin: 20px auto;
@@ -423,32 +481,12 @@
     border: 1px solid;
   }
 
-  .compare-box.old {
-    background: rgba(248,113,113,0.04);
-    border-color: rgba(248,113,113,0.15);
-  }
-
-  .compare-box.new {
-    background: rgba(52,211,153,0.04);
-    border-color: rgba(52,211,153,0.15);
-  }
-
-  .compare-box h4 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-  }
-
+  .compare-box.old { background: rgba(248,113,113,0.04); border-color: rgba(248,113,113,0.15); }
+  .compare-box.new { background: rgba(52,211,153,0.04); border-color: rgba(52,211,153,0.15); }
+  .compare-box h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; }
   .compare-box.old h4 { color: #fca5a5; }
   .compare-box.new h4 { color: #6ee7b7; }
-
-  .compare-box ol {
-    padding-left: 18px;
-    font-size: 0.78rem;
-    color: #94a3b8;
-    line-height: 2;
-  }
-
+  .compare-box ol { padding-left: 18px; font-size: 0.78rem; color: #94a3b8; line-height: 2; }
   .compare-box li { margin-bottom: 2px; }
 
   .footer {
@@ -459,6 +497,185 @@
     letter-spacing: 0.05em;
   }
 
+  /* ============== COMMENTS SECTION ============== */
+  .comments-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 600;
+    transition: color 0.2s;
+    user-select: none;
+  }
+
+  .comments-toggle:hover { color: #94a3b8; }
+
+  .comments-toggle .arrow {
+    transition: transform 0.2s;
+    font-size: 0.6rem;
+  }
+
+  .comments-toggle.open .arrow { transform: rotate(90deg); }
+
+  .comment-count {
+    background: rgba(99,102,241,0.15);
+    color: #a5b4fc;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .comments-section {
+    display: none;
+    margin-top: 12px;
+  }
+
+  .comments-section.open { display: block; }
+
+  .comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .comment-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.04);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .comment-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .comment-body { flex: 1; min-width: 0; }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .comment-author {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #c7d2fe;
+  }
+
+  .comment-time {
+    font-size: 0.62rem;
+    color: #475569;
+  }
+
+  .comment-delete {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #475569;
+    font-size: 0.65rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .comment-delete:hover {
+    color: #f87171;
+    background: rgba(248,113,113,0.1);
+  }
+
+  .comment-text {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+
+  .comment-form {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+
+  .comment-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #e0e0e8;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    resize: none;
+    min-height: 36px;
+    max-height: 100px;
+    transition: border-color 0.2s;
+  }
+
+  .comment-input:focus {
+    outline: none;
+    border-color: rgba(99,102,241,0.4);
+  }
+
+  .comment-input::placeholder { color: #334155; }
+
+  .comment-submit {
+    padding: 8px 16px;
+    background: rgba(99,102,241,0.2);
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 8px;
+    color: #a5b4fc;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .comment-submit:hover {
+    background: rgba(99,102,241,0.3);
+  }
+
+  .comment-submit:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .comment-login-msg {
+    font-size: 0.72rem;
+    color: #475569;
+    text-align: center;
+    padding: 8px;
+    font-style: italic;
+  }
+
+  .no-comments {
+    font-size: 0.72rem;
+    color: #334155;
+    text-align: center;
+    padding: 8px;
+    font-style: italic;
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .step:nth-child(odd),
@@ -466,16 +683,11 @@
       flex-direction: column;
       padding: 0 0 0 40px;
     }
-    .pipeline::before {
-      left: 15px;
-    }
-    .step-dot {
-      left: 15px;
-    }
-    .compare-grid {
-      grid-template-columns: 1fr;
-    }
+    .pipeline::before { left: 15px; }
+    .step-dot { left: 15px; }
+    .compare-grid { grid-template-columns: 1fr; }
     .header h1 { font-size: 1.6rem; }
+    .top-bar { gap: 10px; }
   }
 </style>
 </head>
@@ -483,10 +695,25 @@
 
 <div class="header">
   <h1>ICONIC — Post-Production Pipeline</h1>
-  <p><span class="lang ko">Workflow Architecture &amp; Resolution Strategy</span><span class="lang en">Workflow Architecture &amp; Resolution Strategy</span></p>
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="switchLang('ko')">KR</button>
-    <button class="lang-btn" onclick="switchLang('en')">EN</button>
+  <p>Workflow Architecture &amp; Resolution Strategy</p>
+  <div class="top-bar">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="switchLang('ko')">KR</button>
+      <button class="lang-btn" onclick="switchLang('en')">EN</button>
+    </div>
+    <div class="auth-area">
+      <button class="auth-btn" id="loginBtn" onclick="googleLogin()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+        <span class="lang ko">Google 로그인</span><span class="lang en">Sign in with Google</span>
+      </button>
+      <div class="user-info" id="userInfo">
+        <img class="user-avatar" id="userAvatar" src="" alt="">
+        <span class="user-name" id="userName"></span>
+        <button class="logout-btn" onclick="googleLogout()">
+          <span class="lang ko">로그아웃</span><span class="lang en">Logout</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -518,7 +745,7 @@
     <!-- Step 1 -->
     <div class="step color-edit">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="current-1">
         <div class="step-num">STEP 01 — ON-SET</div>
         <div class="step-title">
           <span class="lang ko">현장 편집 (On-Set Edit)</span>
@@ -536,7 +763,7 @@
     <!-- Step 2 -->
     <div class="step color-edit">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="current-2">
         <div class="step-num">STEP 02 — OFFLINE EDIT</div>
         <div class="step-title">
           <span class="lang ko">오프라인 추가 편집 (LA)</span>
@@ -554,7 +781,7 @@
     <!-- Step 3 -->
     <div class="step color-edit">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="current-3">
         <div class="step-num">STEP 03 — RELINK</div>
         <div class="step-title">
           <span class="lang ko">원본 Relink &amp; EDL 출력</span>
@@ -572,7 +799,7 @@
     <!-- Step 4 -->
     <div class="step color-color">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="current-4">
         <div class="step-num">STEP 04 — COLOR</div>
         <div class="step-title">
           <span class="lang ko">컬러 그레이딩</span>
@@ -590,7 +817,7 @@
     <!-- Step 5 — PROBLEM ZONE -->
     <div class="step color-problem">
       <div class="step-dot"></div>
-      <div class="step-card" style="border-color: rgba(248,113,113,0.2);">
+      <div class="step-card" data-step-id="current-5" style="border-color: rgba(248,113,113,0.2);">
         <div class="step-num">STEP 05 — ⚠ BOTTLENECK</div>
         <div class="step-title">
           <span class="lang ko">컬러본 재편집 → VFX 전달</span>
@@ -610,7 +837,7 @@
     <!-- Step 6 -->
     <div class="step color-vfx">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="current-6">
         <div class="step-num">STEP 06 — VFX</div>
         <div class="step-title">
           <span class="lang ko">VFX / 3D 작업</span>
@@ -628,7 +855,7 @@
     <!-- Step 7 -->
     <div class="step color-conform">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="current-7">
         <div class="step-num">STEP 07 — CONFORM</div>
         <div class="step-title">
           <span class="lang ko">파이널 컨폼 &amp; 마스터링</span>
@@ -646,7 +873,7 @@
     <!-- Step 8 -->
     <div class="step color-deliver">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="current-8">
         <div class="step-num">STEP 08 — DELIVERY</div>
         <div class="step-title">
           <span class="lang ko">최종 딜리버리</span>
@@ -698,10 +925,9 @@
 
   <div class="pipeline">
 
-    <!-- R-Step 1 -->
     <div class="step color-edit">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="recommended-1">
         <div class="step-num">STEP 01 — ON-SET + OFFLINE</div>
         <div class="step-title">
           <span class="lang ko">현장 편집 → Dakota 오프라인 편집</span>
@@ -715,10 +941,9 @@
       </div>
     </div>
 
-    <!-- R-Step 2 -->
     <div class="step color-edit">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="recommended-2">
         <div class="step-num">STEP 02 — RELINK &amp; DUAL EXPORT</div>
         <div class="step-title">
           <span class="lang ko">Relink → 이중 출력 (EDL + 효과 데이터)</span>
@@ -737,10 +962,9 @@
       </div>
     </div>
 
-    <!-- R-Step 3 -->
     <div class="step color-color">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="recommended-3">
         <div class="step-num">STEP 03 — COLOR</div>
         <div class="step-title">
           <span class="lang ko">컬러 그레이딩 (기존 동일)</span>
@@ -755,10 +979,9 @@
       </div>
     </div>
 
-    <!-- R-Step 4 — KEY CHANGE -->
     <div class="step color-vfx">
       <div class="step-dot"></div>
-      <div class="step-card" style="border-color: rgba(52,211,153,0.25);">
+      <div class="step-card" data-step-id="recommended-4" style="border-color: rgba(52,211,153,0.25);">
         <div class="step-num">STEP 04 — 🔑 KEY CHANGE</div>
         <div class="step-title">
           <span class="lang ko">클린 플레이트 출력 → VFX 전달</span>
@@ -783,10 +1006,9 @@
       </div>
     </div>
 
-    <!-- R-Step 5 -->
     <div class="step color-vfx">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="recommended-5">
         <div class="step-num">STEP 05 — VFX</div>
         <div class="step-title">
           <span class="lang ko">VFX / 3D 작업 (클린 플레이트 기반)</span>
@@ -809,10 +1031,9 @@
       </div>
     </div>
 
-    <!-- R-Step 6 — Final Conform -->
     <div class="step color-conform">
       <div class="step-dot"></div>
-      <div class="step-card" style="border-color: rgba(251,191,36,0.25);">
+      <div class="step-card" data-step-id="recommended-6" style="border-color: rgba(251,191,36,0.25);">
         <div class="step-num">STEP 06 — FINAL CONFORM</div>
         <div class="step-title">
           <span class="lang ko">파이널 컨폼 — 효과 최종 적용</span>
@@ -829,10 +1050,9 @@
       </div>
     </div>
 
-    <!-- R-Step 7 -->
     <div class="step color-deliver">
       <div class="step-dot"></div>
-      <div class="step-card">
+      <div class="step-card" data-step-id="recommended-7">
         <div class="step-num">STEP 07 — DELIVERY</div>
         <div class="step-title">
           <span class="lang ko">마스터링 &amp; 딜리버리</span>
@@ -930,91 +1150,25 @@
     <span class="lang en">Impact on VFX Render Time and Work Efficiency</span>
   </div>
 
-  <!-- Korean Table -->
   <table class="res-table lang ko">
-    <thead>
-      <tr>
-        <th>항목</th>
-        <th>4608×3164 (원본)</th>
-        <th>3840×2160 (UHD)</th>
-        <th>비고</th>
-      </tr>
-    </thead>
+    <thead><tr><th>항목</th><th>4608×3164 (원본)</th><th>3840×2160 (UHD)</th><th>비고</th></tr></thead>
     <tbody>
-      <tr>
-        <td>픽셀 수</td>
-        <td>~14.6M</td>
-        <td>~8.3M</td>
-        <td class="highlight">UHD가 43% 적음</td>
-      </tr>
-      <tr>
-        <td>렌더 시간 (예상)</td>
-        <td class="bad">기준 (1x)</td>
-        <td class="good">~0.57x</td>
-        <td>픽셀 비례 단순 계산</td>
-      </tr>
-      <tr>
-        <td>디스크 용량</td>
-        <td class="bad">큼</td>
-        <td class="good">약 43% 절약</td>
-        <td>4444XQ 기준</td>
-      </tr>
-      <tr>
-        <td>최종 딜리버리 품질</td>
-        <td>4K+ 여유</td>
-        <td>4K 정확 fit</td>
-        <td>최종이 3840이면 차이 없음</td>
-      </tr>
-      <tr>
-        <td>줌/리프레임 여유</td>
-        <td class="good">있음 (~120%)</td>
-        <td class="bad">없음 (1:1)</td>
-        <td>컨폼에서 줌 적용 시 원본이 유리</td>
-      </tr>
+      <tr><td>픽셀 수</td><td>~14.6M</td><td>~8.3M</td><td class="highlight">UHD가 43% 적음</td></tr>
+      <tr><td>렌더 시간 (예상)</td><td class="bad">기준 (1x)</td><td class="good">~0.57x</td><td>픽셀 비례 단순 계산</td></tr>
+      <tr><td>디스크 용량</td><td class="bad">큼</td><td class="good">약 43% 절약</td><td>4444XQ 기준</td></tr>
+      <tr><td>최종 딜리버리 품질</td><td>4K+ 여유</td><td>4K 정확 fit</td><td>최종이 3840이면 차이 없음</td></tr>
+      <tr><td>줌/리프레임 여유</td><td class="good">있음 (~120%)</td><td class="bad">없음 (1:1)</td><td>컨폼에서 줌 적용 시 원본이 유리</td></tr>
     </tbody>
   </table>
 
-  <!-- English Table -->
   <table class="res-table lang en">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>4608×3164 (Original)</th>
-        <th>3840×2160 (UHD)</th>
-        <th>Notes</th>
-      </tr>
-    </thead>
+    <thead><tr><th>Item</th><th>4608×3164 (Original)</th><th>3840×2160 (UHD)</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr>
-        <td>Pixel Count</td>
-        <td>~14.6M</td>
-        <td>~8.3M</td>
-        <td class="highlight">UHD is 43% less</td>
-      </tr>
-      <tr>
-        <td>Render Time (Est.)</td>
-        <td class="bad">Baseline (1x)</td>
-        <td class="good">~0.57x</td>
-        <td>Simple pixel-proportional calc</td>
-      </tr>
-      <tr>
-        <td>Disk Space</td>
-        <td class="bad">Large</td>
-        <td class="good">~43% savings</td>
-        <td>Based on 4444XQ</td>
-      </tr>
-      <tr>
-        <td>Final Delivery Quality</td>
-        <td>4K+ headroom</td>
-        <td>4K exact fit</td>
-        <td>No difference if final is 3840</td>
-      </tr>
-      <tr>
-        <td>Zoom/Reframe Headroom</td>
-        <td class="good">Available (~120%)</td>
-        <td class="bad">None (1:1)</td>
-        <td>Original is better when zoom applied in conform</td>
-      </tr>
+      <tr><td>Pixel Count</td><td>~14.6M</td><td>~8.3M</td><td class="highlight">UHD is 43% less</td></tr>
+      <tr><td>Render Time (Est.)</td><td class="bad">Baseline (1x)</td><td class="good">~0.57x</td><td>Simple pixel-proportional calc</td></tr>
+      <tr><td>Disk Space</td><td class="bad">Large</td><td class="good">~43% savings</td><td>Based on 4444XQ</td></tr>
+      <tr><td>Final Delivery Quality</td><td>4K+ headroom</td><td>4K exact fit</td><td>No difference if final is 3840</td></tr>
+      <tr><td>Zoom/Reframe Headroom</td><td class="good">Available (~120%)</td><td class="bad">None (1:1)</td><td>Original is better when zoom applied in conform</td></tr>
     </tbody>
   </table>
 
@@ -1034,8 +1188,7 @@
   <div class="alert-box success" style="max-width:860px; margin:20px auto 60px; padding:20px 26px;">
     <h3 class="lang ko">🎯 Giovi에게 회신 요약</h3>
     <h3 class="lang en">🎯 Reply Summary for Giovi</h3>
-    <p class="lang ko" style="margin-top:4px;">"Yes — we'll deliver clean plates to VFX without the zoom/shake/speed ramp effects. Jin-hyuk will output the colored footage as clean 4444XQ MOVs, and we'll preserve Dakota's effect data separately. The zoom, camera shake, and speed ramp will be re-applied in the final conform stage after VFX is completed. Let's align on the resolution — are you okay with 3840×2160 for VFX plates, or do you need the full 4608×3164 for shots with significant reframing?"</p>
-    <p class="lang en" style="margin-top:4px;">"Yes — we'll deliver clean plates to VFX without the zoom/shake/speed ramp effects. Jin-hyuk will output the colored footage as clean 4444XQ MOVs, and we'll preserve Dakota's effect data separately. The zoom, camera shake, and speed ramp will be re-applied in the final conform stage after VFX is completed. Let's align on the resolution — are you okay with 3840×2160 for VFX plates, or do you need the full 4608×3164 for shots with significant reframing?"</p>
+    <p style="margin-top:4px;">"Yes — we'll deliver clean plates to VFX without the zoom/shake/speed ramp effects. Jin-hyuk will output the colored footage as clean 4444XQ MOVs, and we'll preserve Dakota's effect data separately. The zoom, camera shake, and speed ramp will be re-applied in the final conform stage after VFX is completed. Let's align on the resolution — are you okay with 3840×2160 for VFX plates, or do you need the full 4608×3164 for shots with significant reframing?"</p>
   </div>
 
 </div>
@@ -1043,6 +1196,226 @@
 <div class="footer">
   ICONIC Post-Production Pipeline — Ambience Inc. / MATTER Lab — 2026.03
 </div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+  import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+  import { getFirestore, collection, addDoc, deleteDoc, doc, query, where, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDElzdlHQUqL-o148Sk4eijWW2Ufh8qZfc",
+    authDomain: "iconic-workflow.firebaseapp.com",
+    projectId: "iconic-workflow",
+    storageBucket: "iconic-workflow.firebasestorage.app",
+    messagingSenderId: "955498200009",
+    appId: "1:955498200009:web:54cc73c739a3f7ab278618",
+    measurementId: "G-SQMVCQHD56"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  let currentUser = null;
+
+  // Auth state
+  onAuthStateChanged(auth, function(user) {
+    currentUser = user;
+    var loginBtn = document.getElementById('loginBtn');
+    var userInfo = document.getElementById('userInfo');
+    if (user) {
+      loginBtn.style.display = 'none';
+      userInfo.classList.add('show');
+      document.getElementById('userAvatar').src = user.photoURL || '';
+      document.getElementById('userName').textContent = user.displayName || user.email;
+      // Enable all comment forms
+      document.querySelectorAll('.comment-input').forEach(function(el) { el.disabled = false; el.placeholder = ''; });
+      document.querySelectorAll('.comment-submit').forEach(function(el) { el.disabled = false; });
+      document.querySelectorAll('.comment-login-msg').forEach(function(el) { el.style.display = 'none'; });
+    } else {
+      loginBtn.style.display = 'flex';
+      userInfo.classList.remove('show');
+      document.querySelectorAll('.comment-input').forEach(function(el) { el.disabled = true; el.placeholder = ''; });
+      document.querySelectorAll('.comment-submit').forEach(function(el) { el.disabled = true; });
+      document.querySelectorAll('.comment-login-msg').forEach(function(el) { el.style.display = 'block'; });
+    }
+  });
+
+  // Google login/logout
+  window.googleLogin = function() {
+    signInWithPopup(auth, provider).catch(function(err) { console.error('Login error:', err); });
+  };
+
+  window.googleLogout = function() {
+    signOut(auth).catch(function(err) { console.error('Logout error:', err); });
+  };
+
+  // Initialize comments for all step cards
+  function initComments() {
+    document.querySelectorAll('.step-card[data-step-id]').forEach(function(card) {
+      var stepId = card.getAttribute('data-step-id');
+
+      // Create comments UI
+      var toggle = document.createElement('div');
+      toggle.className = 'comments-toggle';
+      toggle.innerHTML = '<span class="arrow">▶</span> <span class="lang ko">피드백</span><span class="lang en">Feedback</span> <span class="comment-count" data-count-for="' + stepId + '">0</span>';
+      toggle.onclick = function() {
+        toggle.classList.toggle('open');
+        section.classList.toggle('open');
+      };
+
+      var section = document.createElement('div');
+      section.className = 'comments-section';
+
+      var list = document.createElement('div');
+      list.className = 'comment-list';
+      list.id = 'comments-' + stepId;
+
+      var noComments = document.createElement('div');
+      noComments.className = 'no-comments';
+      noComments.innerHTML = '<span class="lang ko">아직 피드백이 없습니다</span><span class="lang en">No feedback yet</span>';
+      noComments.id = 'no-comments-' + stepId;
+
+      var loginMsg = document.createElement('div');
+      loginMsg.className = 'comment-login-msg';
+      loginMsg.innerHTML = '<span class="lang ko">피드백을 남기려면 Google 로그인하세요</span><span class="lang en">Sign in with Google to leave feedback</span>';
+
+      var form = document.createElement('div');
+      form.className = 'comment-form';
+      form.innerHTML = '<textarea class="comment-input" rows="1" placeholder="" disabled></textarea>' +
+        '<button class="comment-submit" disabled onclick="window.postComment(\'' + stepId + '\', this)"><span class="lang ko">전송</span><span class="lang en">Send</span></button>';
+
+      section.appendChild(list);
+      section.appendChild(noComments);
+      section.appendChild(loginMsg);
+      section.appendChild(form);
+      card.appendChild(toggle);
+      card.appendChild(section);
+
+      // Auto-grow textarea
+      var textarea = form.querySelector('.comment-input');
+      textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+      });
+      textarea.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          var btn = form.querySelector('.comment-submit');
+          if (!btn.disabled && textarea.value.trim()) btn.click();
+        }
+      });
+
+      // Listen for comments
+      listenComments(stepId);
+
+      // Apply current language
+      if (document.body.classList.contains('en')) {
+        card.querySelectorAll('.lang.ko').forEach(function(el) { el.style.display = 'none'; });
+        card.querySelectorAll('.lang.en').forEach(function(el) { el.style.display = 'inline'; });
+      }
+    });
+  }
+
+  // Listen for real-time comments
+  function listenComments(stepId) {
+    var q = query(
+      collection(db, 'comments'),
+      where('stepId', '==', stepId),
+      orderBy('createdAt', 'asc')
+    );
+
+    onSnapshot(q, function(snapshot) {
+      var list = document.getElementById('comments-' + stepId);
+      var noComments = document.getElementById('no-comments-' + stepId);
+      var countEl = document.querySelector('[data-count-for="' + stepId + '"]');
+
+      list.innerHTML = '';
+      var count = 0;
+
+      snapshot.forEach(function(docSnap) {
+        count++;
+        var data = docSnap.data();
+        var item = document.createElement('div');
+        item.className = 'comment-item';
+
+        var timeStr = '';
+        if (data.createdAt) {
+          var d = data.createdAt.toDate();
+          timeStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        }
+
+        var deleteBtn = '';
+        if (currentUser && data.userId === currentUser.uid) {
+          deleteBtn = '<button class="comment-delete" onclick="window.deleteComment(\'' + docSnap.id + '\')">✕</button>';
+        }
+
+        item.innerHTML = '<img class="comment-avatar" src="' + (data.userPhoto || '') + '" alt="">' +
+          '<div class="comment-body">' +
+            '<div class="comment-header">' +
+              '<span class="comment-author">' + (data.userName || 'Unknown') + '</span>' +
+              '<span class="comment-time">' + timeStr + '</span>' +
+              deleteBtn +
+            '</div>' +
+            '<div class="comment-text">' + escapeHtml(data.text) + '</div>' +
+          '</div>';
+
+        list.appendChild(item);
+      });
+
+      countEl.textContent = count;
+      noComments.style.display = count === 0 ? 'block' : 'none';
+    }, function(err) {
+      console.error('Firestore listen error for ' + stepId + ':', err);
+    });
+  }
+
+  // Post comment
+  window.postComment = async function(stepId, btn) {
+    if (!currentUser) return;
+    var form = btn.parentElement;
+    var input = form.querySelector('.comment-input');
+    var text = input.value.trim();
+    if (!text) return;
+
+    btn.disabled = true;
+    try {
+      await addDoc(collection(db, 'comments'), {
+        stepId: stepId,
+        text: text,
+        userName: currentUser.displayName || currentUser.email,
+        userPhoto: currentUser.photoURL || '',
+        userId: currentUser.uid,
+        createdAt: serverTimestamp()
+      });
+      input.value = '';
+      input.style.height = 'auto';
+    } catch(err) {
+      console.error('Post error:', err);
+    }
+    btn.disabled = false;
+  };
+
+  // Delete comment
+  window.deleteComment = async function(docId) {
+    try {
+      await deleteDoc(doc(db, 'comments', docId));
+    } catch(err) {
+      console.error('Delete error:', err);
+    }
+  };
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // Init on load
+  initComments();
+</script>
 
 <script>
 function switchTab(tab, btn) {
