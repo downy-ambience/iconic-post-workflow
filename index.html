@@ -677,6 +677,107 @@
   }
 
   /* Responsive */
+  /* ============== ADMIN EDIT MODE ============== */
+  .admin-edit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 6px;
+    background: rgba(99,102,241,0.1);
+    color: #a5b4fc;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 5;
+    display: none;
+  }
+
+  .admin-edit-btn:hover {
+    background: rgba(99,102,241,0.25);
+    border-color: #6366f1;
+  }
+
+  .step-card.editing {
+    border-color: rgba(99,102,241,0.4) !important;
+    background: rgba(99,102,241,0.06) !important;
+  }
+
+  .step-card.editing .admin-edit-btn { display: none; }
+
+  .edit-field {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #e0e0e8;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+
+  .edit-field:focus {
+    outline: none;
+    border-color: rgba(99,102,241,0.5);
+  }
+
+  .edit-field.small { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; }
+
+  .edit-field-label {
+    font-size: 0.6rem;
+    color: #64748b;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    margin-top: 8px;
+  }
+
+  .edit-field-label:first-child { margin-top: 0; }
+
+  .edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    justify-content: flex-end;
+  }
+
+  .edit-save-btn, .edit-cancel-btn {
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid;
+  }
+
+  .edit-save-btn {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.3);
+    color: #6ee7b7;
+  }
+
+  .edit-save-btn:hover {
+    background: rgba(52,211,153,0.25);
+  }
+
+  .edit-cancel-btn {
+    background: rgba(248,113,113,0.1);
+    border-color: rgba(248,113,113,0.2);
+    color: #fca5a5;
+  }
+
+  .edit-cancel-btn:hover {
+    background: rgba(248,113,113,0.2);
+  }
+
   @media (max-width: 768px) {
     .step:nth-child(odd),
     .step:nth-child(even) {
@@ -1201,7 +1302,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
   import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
-  import { getFirestore, collection, addDoc, deleteDoc, doc, query, where, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
+  import { getFirestore, collection, addDoc, deleteDoc, doc, query, where, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyDElzdlHQUqL-o148Sk4eijWW2Ufh8qZfc",
@@ -1412,6 +1513,244 @@
     div.textContent = str;
     return div.innerHTML;
   }
+
+  // ============== ADMIN INLINE EDIT ==============
+  const ADMIN_EMAILS = ['downy@ambienceseoul.com', 'sangah@ambienceseoul.com'];
+
+  function isAdmin() {
+    return currentUser && ADMIN_EMAILS.includes(currentUser.email);
+  }
+
+  // Load saved step data from Firestore and apply to DOM
+  async function loadStepData() {
+    var cards = document.querySelectorAll('.step-card[data-step-id]');
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var stepId = card.getAttribute('data-step-id');
+      try {
+        var snap = await getDoc(doc(db, 'steps', stepId));
+        if (snap.exists()) {
+          applyStepData(card, snap.data());
+        }
+      } catch(err) {
+        console.error('Error loading step ' + stepId + ':', err);
+      }
+    }
+  }
+
+  // Apply Firestore data to a step-card DOM element
+  function applyStepData(card, data) {
+    if (data.stepNum) {
+      card.querySelector('.step-num').textContent = data.stepNum;
+    }
+    if (data.titleKo !== undefined) {
+      var titleEl = card.querySelector('.step-title');
+      var titleKo = titleEl.querySelector('.lang.ko');
+      var titleEn = titleEl.querySelector('.lang.en');
+      if (titleKo) titleKo.textContent = data.titleKo;
+      if (titleEn) titleEn.textContent = data.titleEn || '';
+    }
+    if (data.descKo !== undefined) {
+      var descEl = card.querySelector('.step-desc');
+      var descKo = descEl.querySelector('.lang.ko');
+      var descEn = descEl.querySelector('.lang.en');
+      if (descKo) descKo.innerHTML = data.descKo;
+      if (descEn) descEn.innerHTML = data.descEn || '';
+    }
+    if (data.person !== undefined) {
+      card.querySelector('.step-person').innerHTML = data.person;
+    }
+    var techEl = card.querySelector('.step-tech');
+    if (data.tech !== undefined && techEl) {
+      techEl.innerHTML = data.tech;
+    }
+  }
+
+  // Add edit buttons to all step-cards (admin only)
+  function showAdminEditButtons() {
+    document.querySelectorAll('.step-card[data-step-id]').forEach(function(card) {
+      // Avoid duplicating buttons
+      if (card.querySelector('.admin-edit-btn')) return;
+      var btn = document.createElement('button');
+      btn.className = 'admin-edit-btn';
+      btn.textContent = '✏️ 편집';
+      btn.style.display = 'block';
+      btn.onclick = function(e) {
+        e.stopPropagation();
+        enterEditMode(card);
+      };
+      card.appendChild(btn);
+    });
+  }
+
+  function hideAdminEditButtons() {
+    document.querySelectorAll('.admin-edit-btn').forEach(function(btn) {
+      btn.remove();
+    });
+  }
+
+  // Enter edit mode for a step-card
+  function enterEditMode(card) {
+    if (card.classList.contains('editing')) return;
+    card.classList.add('editing');
+
+    var stepNum = card.querySelector('.step-num');
+    var titleEl = card.querySelector('.step-title');
+    var descEl = card.querySelector('.step-desc');
+    var personEl = card.querySelector('.step-person');
+    var techEl = card.querySelector('.step-tech');
+
+    // Save original HTML for cancel
+    card._originalHTML = {
+      stepNum: stepNum.innerHTML,
+      title: titleEl.innerHTML,
+      desc: descEl.innerHTML,
+      person: personEl.innerHTML,
+      tech: techEl ? techEl.innerHTML : ''
+    };
+
+    // Extract current text values
+    var titleKo = titleEl.querySelector('.lang.ko') ? titleEl.querySelector('.lang.ko').textContent : '';
+    var titleEn = titleEl.querySelector('.lang.en') ? titleEl.querySelector('.lang.en').textContent : '';
+    var descKo = descEl.querySelector('.lang.ko') ? descEl.querySelector('.lang.ko').innerHTML : '';
+    var descEn = descEl.querySelector('.lang.en') ? descEl.querySelector('.lang.en').innerHTML : '';
+    var personText = personEl.innerHTML;
+    var techText = techEl ? techEl.innerHTML : '';
+
+    // Replace with edit fields using DOM creation to avoid escaping issues
+    var stepNumText = stepNum.textContent;
+    stepNum.innerHTML = '';
+    var snLabel = document.createElement('div'); snLabel.className = 'edit-field-label'; snLabel.textContent = 'Step Number';
+    var snInput = document.createElement('input'); snInput.className = 'edit-field small'; snInput.type = 'text'; snInput.setAttribute('data-field', 'stepNum'); snInput.value = stepNumText;
+    stepNum.appendChild(snLabel); stepNum.appendChild(snInput);
+
+    titleEl.innerHTML = '';
+    var tkLabel = document.createElement('div'); tkLabel.className = 'edit-field-label'; tkLabel.textContent = 'Title (KO)';
+    var tkInput = document.createElement('input'); tkInput.className = 'edit-field'; tkInput.type = 'text'; tkInput.setAttribute('data-field', 'titleKo'); tkInput.value = titleKo;
+    var teLabel = document.createElement('div'); teLabel.className = 'edit-field-label'; teLabel.textContent = 'Title (EN)';
+    var teInput = document.createElement('input'); teInput.className = 'edit-field'; teInput.type = 'text'; teInput.setAttribute('data-field', 'titleEn'); teInput.value = titleEn;
+    titleEl.appendChild(tkLabel); titleEl.appendChild(tkInput); titleEl.appendChild(teLabel); titleEl.appendChild(teInput);
+
+    descEl.innerHTML = '';
+    var descKoLabel = document.createElement('div'); descKoLabel.className = 'edit-field-label'; descKoLabel.textContent = 'Description (KO) — HTML OK';
+    var descKoArea = document.createElement('textarea'); descKoArea.className = 'edit-field'; descKoArea.rows = 4; descKoArea.setAttribute('data-field', 'descKo'); descKoArea.value = descKo;
+    var descEnLabel = document.createElement('div'); descEnLabel.className = 'edit-field-label'; descEnLabel.textContent = 'Description (EN) — HTML OK';
+    var descEnArea = document.createElement('textarea'); descEnArea.className = 'edit-field'; descEnArea.rows = 4; descEnArea.setAttribute('data-field', 'descEn'); descEnArea.value = descEn;
+    descEl.appendChild(descKoLabel); descEl.appendChild(descKoArea); descEl.appendChild(descEnLabel); descEl.appendChild(descEnArea);
+
+    personEl.innerHTML = '';
+    var personLabel = document.createElement('div'); personLabel.className = 'edit-field-label'; personLabel.textContent = 'Person — HTML OK';
+    var personInput = document.createElement('input'); personInput.className = 'edit-field'; personInput.type = 'text'; personInput.setAttribute('data-field', 'person'); personInput.value = personText;
+    personEl.appendChild(personLabel); personEl.appendChild(personInput);
+
+    if (techEl) {
+      techEl.innerHTML = '';
+      var techLabel = document.createElement('div'); techLabel.className = 'edit-field-label'; techLabel.textContent = 'Tech — HTML OK';
+      var techInput = document.createElement('input'); techInput.className = 'edit-field'; techInput.type = 'text'; techInput.setAttribute('data-field', 'tech'); techInput.value = techText;
+      techEl.appendChild(techLabel); techEl.appendChild(techInput);
+    }
+
+    // Add save/cancel buttons
+    var actions = document.createElement('div');
+    actions.className = 'edit-actions';
+    actions.innerHTML = '<button class="edit-cancel-btn">취소</button><button class="edit-save-btn">저장</button>';
+    actions.querySelector('.edit-cancel-btn').onclick = function() { cancelEdit(card); };
+    actions.querySelector('.edit-save-btn').onclick = function() { saveEdit(card); };
+    card.appendChild(actions);
+  }
+
+  // Cancel edit mode
+  function cancelEdit(card) {
+    if (!card._originalHTML) return;
+    card.querySelector('.step-num').innerHTML = card._originalHTML.stepNum;
+    card.querySelector('.step-title').innerHTML = card._originalHTML.title;
+    card.querySelector('.step-desc').innerHTML = card._originalHTML.desc;
+    card.querySelector('.step-person').innerHTML = card._originalHTML.person;
+    var techEl = card.querySelector('.step-tech');
+    if (techEl && card._originalHTML.tech) techEl.innerHTML = card._originalHTML.tech;
+
+    var actions = card.querySelector('.edit-actions');
+    if (actions) actions.remove();
+
+    card.classList.remove('editing');
+    delete card._originalHTML;
+
+    // Re-show edit button
+    var editBtn = card.querySelector('.admin-edit-btn');
+    if (editBtn) editBtn.style.display = 'block';
+  }
+
+  // Save edit to Firestore
+  async function saveEdit(card) {
+    var stepId = card.getAttribute('data-step-id');
+    var fields = {};
+
+    card.querySelectorAll('[data-field]').forEach(function(el) {
+      fields[el.getAttribute('data-field')] = el.value;
+    });
+
+    var saveBtn = card.querySelector('.edit-save-btn');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '저장 중...'; }
+
+    try {
+      await setDoc(doc(db, 'steps', stepId), {
+        stepNum: fields.stepNum || '',
+        titleKo: fields.titleKo || '',
+        titleEn: fields.titleEn || '',
+        descKo: fields.descKo || '',
+        descEn: fields.descEn || '',
+        person: fields.person || '',
+        tech: fields.tech || '',
+        updatedAt: serverTimestamp(),
+        updatedBy: currentUser.email
+      });
+
+      // Exit edit mode and apply new data to DOM
+      var actions = card.querySelector('.edit-actions');
+      if (actions) actions.remove();
+      card.classList.remove('editing');
+      delete card._originalHTML;
+
+      // Rebuild the card content with new values
+      card.querySelector('.step-num').textContent = fields.stepNum || '';
+
+      var titleEl = card.querySelector('.step-title');
+      titleEl.innerHTML = '<span class="lang ko">' + escapeHtml(fields.titleKo || '') + '</span>' +
+        '<span class="lang en">' + escapeHtml(fields.titleEn || '') + '</span>';
+
+      var descEl = card.querySelector('.step-desc');
+      descEl.innerHTML = '<span class="lang ko">' + (fields.descKo || '') + '</span>' +
+        '<span class="lang en">' + (fields.descEn || '') + '</span>';
+
+      card.querySelector('.step-person').innerHTML = fields.person || '';
+
+      var techEl = card.querySelector('.step-tech');
+      if (techEl) {
+        techEl.innerHTML = fields.tech || '';
+      }
+
+      // Re-show edit button
+      var editBtn = card.querySelector('.admin-edit-btn');
+      if (editBtn) editBtn.style.display = 'block';
+
+    } catch(err) {
+      console.error('Save error:', err);
+      alert('저장 실패: ' + err.message);
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '저장'; }
+    }
+  }
+
+  // Secondary auth listener: handle admin edit buttons
+  onAuthStateChanged(auth, function(user) {
+    if (user && isAdmin()) {
+      showAdminEditButtons();
+    } else {
+      hideAdminEditButtons();
+    }
+  });
+
+  // Load saved step data on init (runs for all users)
+  loadStepData();
 
   // Init on load
   initComments();
