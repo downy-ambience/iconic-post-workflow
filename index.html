@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICONIC — Post-Production Workflow Pipeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0a0a0f;
+    color: #e0e0e8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #6366f1, transparent);
+  }
+
+  .header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #c7d2fe, #818cf8, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Tab Navigation */
+  .tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 20px 20px 0;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .tab-btn {
+    padding: 12px 28px;
+    border: none;
+    background: rgba(255,255,255,0.04);
+    color: #64748b;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .tab-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: #94a3b8;
+  }
+
+  .tab-btn.active {
+    background: rgba(99, 102, 241, 0.12);
+    color: #a5b4fc;
+  }
+
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    width: 60%;
+    height: 2px;
+    background: #6366f1;
+    border-radius: 2px;
+  }
+
+  .tab-btn .badge {
+    display: inline-block;
+    background: #dc2626;
+    color: white;
+    font-size: 0.6rem;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-left: 6px;
+    vertical-align: top;
+  }
+
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Pipeline Container */
+  .pipeline {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    position: relative;
+  }
+
+  /* Vertical Line */
+  .pipeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 60px;
+    bottom: 100px;
+    width: 2px;
+    background: linear-gradient(180deg, #6366f1 0%, #3b82f6 30%, #06b6d4 60%, #10b981 100%);
+    opacity: 0.25;
+    transform: translateX(-50%);
+  }
+
+  /* Step Card */
+  .step {
+    position: relative;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .step:nth-child(odd) {
+    flex-direction: row;
+    padding-right: calc(50% + 30px);
+  }
+
+  .step:nth-child(even) {
+    flex-direction: row-reverse;
+    padding-left: calc(50% + 30px);
+  }
+
+  .step-dot {
+    position: absolute;
+    left: 50%;
+    top: 24px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    border: 2px solid;
+  }
+
+  .step-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 22px 24px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .step-card:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+  }
+
+  .step-num {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.5;
+  }
+
+  .step-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #94a3b8;
+  }
+
+  .step-person {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .step-tech {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* Color coding */
+  .color-edit { --accent: #818cf8; }
+  .color-edit .step-dot { background: #818cf8; border-color: #6366f1; box-shadow: 0 0 12px rgba(129,140,248,0.4); }
+  .color-edit .step-title { color: #c7d2fe; }
+  .color-edit .step-person { background: rgba(129,140,248,0.12); color: #a5b4fc; }
+
+  .color-color { --accent: #f472b6; }
+  .color-color .step-dot { background: #f472b6; border-color: #ec4899; box-shadow: 0 0 12px rgba(244,114,182,0.4); }
+  .color-color .step-title { color: #fbcfe8; }
+  .color-color .step-person { background: rgba(244,114,182,0.12); color: #f9a8d4; }
+
+  .color-vfx { --accent: #34d399; }
+  .color-vfx .step-dot { background: #34d399; border-color: #10b981; box-shadow: 0 0 12px rgba(52,211,153,0.4); }
+  .color-vfx .step-title { color: #a7f3d0; }
+  .color-vfx .step-person { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+
+  .color-conform { --accent: #fbbf24; }
+  .color-conform .step-dot { background: #fbbf24; border-color: #f59e0b; box-shadow: 0 0 12px rgba(251,191,36,0.4); }
+  .color-conform .step-title { color: #fde68a; }
+  .color-conform .step-person { background: rgba(251,191,36,0.12); color: #fcd34d; }
+
+  .color-deliver { --accent: #38bdf8; }
+  .color-deliver .step-dot { background: #38bdf8; border-color: #0ea5e9; box-shadow: 0 0 12px rgba(56,189,248,0.4); }
+  .color-deliver .step-title { color: #bae6fd; }
+  .color-deliver .step-person { background: rgba(56,189,248,0.12); color: #7dd3fc; }
+
+  .color-problem { --accent: #f87171; }
+  .color-problem .step-dot { background: #f87171; border-color: #ef4444; box-shadow: 0 0 12px rgba(248,113,113,0.5); }
+  .color-problem .step-title { color: #fecaca; }
+  .color-problem .step-person { background: rgba(248,113,113,0.12); color: #fca5a5; }
+
+  /* Alert Box */
+  .alert-box {
+    max-width: 860px;
+    margin: 0 auto 30px;
+    padding: 20px 26px;
+    border-radius: 12px;
+    font-size: 0.84rem;
+    line-height: 1.7;
+  }
+
+  .alert-box.warning {
+    background: rgba(251,191,36,0.06);
+    border: 1px solid rgba(251,191,36,0.2);
+    color: #fde68a;
+  }
+
+  .alert-box.success {
+    background: rgba(52,211,153,0.06);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: #a7f3d0;
+  }
+
+  .alert-box.info {
+    background: rgba(99,102,241,0.06);
+    border: 1px solid rgba(99,102,241,0.2);
+    color: #c7d2fe;
+  }
+
+  .alert-box h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .alert-box ul {
+    padding-left: 18px;
+    margin-top: 8px;
+  }
+
+  .alert-box li {
+    margin-bottom: 4px;
+  }
+
+  /* Resolution Table */
+  .res-table {
+    max-width: 860px;
+    margin: 20px auto 40px;
+    border-collapse: collapse;
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 0.8rem;
+  }
+
+  .res-table th {
+    text-align: left;
+    padding: 10px 16px;
+    background: rgba(99,102,241,0.1);
+    color: #a5b4fc;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .res-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: #94a3b8;
+  }
+
+  .res-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .highlight { color: #fbbf24; font-weight: 600; }
+  .good { color: #34d399; }
+  .bad { color: #f87171; }
+
+  /* Section Title */
+  .section-title {
+    text-align: center;
+    padding: 30px 20px 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-bottom: 30px;
+  }
+
+  /* Comparison boxes */
+  .compare-grid {
+    max-width: 860px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 20px;
+  }
+
+  .compare-box {
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid;
+  }
+
+  .compare-box.old {
+    background: rgba(248,113,113,0.04);
+    border-color: rgba(248,113,113,0.15);
+  }
+
+  .compare-box.new {
+    background: rgba(52,211,153,0.04);
+    border-color: rgba(52,211,153,0.15);
+  }
+
+  .compare-box h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .compare-box.old h4 { color: #fca5a5; }
+  .compare-box.new h4 { color: #6ee7b7; }
+
+  .compare-box ol {
+    padding-left: 18px;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    line-height: 2;
+  }
+
+  .compare-box li { margin-bottom: 2px; }
+
+  .footer {
+    text-align: center;
+    padding: 40px 20px 60px;
+    font-size: 0.7rem;
+    color: #334155;
+    letter-spacing: 0.05em;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .step:nth-child(odd),
+    .step:nth-child(even) {
+      flex-direction: column;
+      padding: 0 0 0 40px;
+    }
+    .pipeline::before {
+      left: 15px;
+    }
+    .step-dot {
+      left: 15px;
+    }
+    .compare-grid {
+      grid-template-columns: 1fr;
+    }
+    .header h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ICONIC — Post-Production Pipeline</h1>
+  <p>Workflow Architecture &amp; Resolution Strategy</p>
+</div>
+
+<!-- Tab Navigation -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('current')">현재 워크플로우</button>
+  <button class="tab-btn" onclick="switchTab('recommended')">권장 워크플로우 <span class="badge">NEW</span></button>
+  <button class="tab-btn" onclick="switchTab('compare')">비교 분석</button>
+</div>
+
+<!-- ==================== TAB 1: CURRENT WORKFLOW ==================== -->
+<div id="tab-current" class="tab-content active">
+
+  <div class="alert-box warning" style="max-width:860px; margin:30px auto 10px; padding:20px 26px;">
+    <h3>⚠ 현재 문제점 요약</h3>
+    Dakota의 편집본에 줌/포지셔닝/카메라쉐이크/스피드램핑이 적용된 상태에서, 이 효과가 VFX 트래킹 & 로토 작업을 방해함.
+    컬러리스트는 EDL 기반 원본 작업을 원하고, VFX팀(Giovi/DQ)은 클린 플레이트를 원하는 상충 발생.
+  </div>
+
+  <div class="pipeline">
+
+    <!-- Step 1 -->
+    <div class="step color-edit">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 01 — ON-SET</div>
+        <div class="step-title">현장 편집 (On-Set Edit)</div>
+        <div class="step-desc">
+          현장에서 촬영본을 바로 조합하여 1차 편집본 완성. 연출감독과 현장에서 실시간 논의하며 컷 확정.
+        </div>
+        <div class="step-person">👤 장진혁 감독 (Editor)</div>
+        <div class="step-tech">Premiere Pro / DaVinci — 원본 4608×3164 footage</div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step color-edit">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 02 — OFFLINE EDIT</div>
+        <div class="step-title">오프라인 추가 편집 (LA)</div>
+        <div class="step-desc">
+          Dakota가 코디와 함께 프레임 단위 수정 및 <span class="highlight">디지털 줌, 포지셔닝, 카메라 쉐이킹, 스피드램핑</span> 효과 추가. 3840×2160 시퀀스 기준으로 작업하여 원본 4608×3164 대비 충분한 해상도 여유 확보.
+        </div>
+        <div class="step-person">👤 Dakota (LA Editor) + 코디</div>
+        <div class="step-tech">저해상 MP4 프록시로 편집 → 3840×2160 sequence</div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step color-edit">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 03 — RELINK</div>
+        <div class="step-title">원본 Relink &amp; EDL 출력</div>
+        <div class="step-desc">
+          Dakota가 4444XQ 다운로드 불가 → 저해상 MP4로 편집한 프로젝트를 진혁이가 받아서 원본 푸티지(4608×3164)로 Relink. 줌/포지셔닝/스피드램핑 효과를 제거하고 <span class="highlight">클린 EDL</span>로 컬러실에 전달.
+        </div>
+        <div class="step-person">👤 장진혁 감독</div>
+        <div class="step-tech">EDL export — effects stripped</div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step color-color">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 04 — COLOR</div>
+        <div class="step-title">컬러 그레이딩</div>
+        <div class="step-desc">
+          컬러리스트가 EDL로 원본 4608×3164 푸티지를 불러와서 풀 해상도 컬러 작업 진행. 컬러된 푸티지를 팀에 전달.
+        </div>
+        <div class="step-person">🎨 Colorist</div>
+        <div class="step-tech">DaVinci Resolve — 4608×3164 원본 기준 컬러</div>
+      </div>
+    </div>
+
+    <!-- Step 5 — PROBLEM ZONE -->
+    <div class="step color-problem">
+      <div class="step-dot"></div>
+      <div class="step-card" style="border-color: rgba(248,113,113,0.2);">
+        <div class="step-num">STEP 05 — ⚠ BOTTLENECK</div>
+        <div class="step-title">컬러본 재편집 → VFX 전달</div>
+        <div class="step-desc">
+          컬러된 푸티지를 받아서 진혁이가 다시 편집본 재구성. Dakota의 줌/쉐이크/스피드램핑을 <span class="bad">다시 적용</span>하여 4444XQ MOV 출력 → VFX팀 전달.<br><br>
+          <strong class="bad">문제:</strong> VFX팀이 트래킹/로토 작업 시 줌·쉐이크·스피드램핑이 적용된 상태면 작업 난이도와 시간이 급격히 증가. Giovi가 "효과를 파이널 컨폼 단계로 미뤄달라"고 요청한 이유.
+        </div>
+        <div class="step-person">👤 장진혁 → 🔧 DQ (VFX Lead) / Giovi (Post Producer)</div>
+        <div class="step-tech">출력: 4444XQ MOV — 줌/쉐이크 포함 여부가 핵심 이슈</div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step color-vfx">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 06 — VFX</div>
+        <div class="step-title">VFX / 3D 작업</div>
+        <div class="step-desc">
+          DQ와 VFX팀이 컬러된 편집본 기반으로 합성, 3D, 로토스코핑, 트래m�� 등 진행.
+          해상도가 클수록 렌더 시간↑, 작업 복잡도↑.
+        </div>
+        <div class="step-person">🔧 DQ (VFX Lead) + VFX Team</div>
+        <div class="step-tech">Nuke / After Effects / 3D Software</div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step color-conform">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 07 — CONFORM</div>
+        <div class="step-title">파이널 컨폼 &amp; 마스터링</div>
+        <div class="step-desc">
+          VFX 완성본 + 컬러본을 합쳐서 최종 마스터. 줌/쉐이크/스피드램쥑 효과를 이 단계에서 적용할 것인지가 핵심 의사결정 포인트.
+        </div>
+        <div class="step-person">👤 장진혁 / Conform Editor</div>
+        <div class="step-tech">최종 출력: 3840×2160 마스터</div>
+      </div>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="step color-deliver">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 08 — DELIVERY</div>
+        <div class="step-title">최종 딜리버리</div>
+        <div class="step-desc">
+          마스터링 완료 후 각 플랫폼별 스펙에 맞춰 최종 파일 출력 및 납품.
+        </div>
+        <div class="step-person">📦 Ambience Inc.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== TAB 2: RECOMMENDED WORKFLOW ==================== -->
+<div id="tab-recommended" class="tab-content">
+
+  <div class="alert-box success" style="max-width:860px; margin:30px auto 10px; padding:20px 26px;">
+    <h3>✅ 권장안: "Clean Plate → VFX → Final Conform" 방식</h3>
+    Giovi의 제안을 수용하여, 줌/쉐이크/스피드램핑을 VFX 이후 파이널 컨폼 단계에서 적용하는 워크플로우.
+    VFX팀에는 <strong>클린 플레이트</strong>만 전달하여 트래m��/로토 효율을 극대화.
+  </div>
+
+  <div class="alert-box info" style="max-width:860px; margin:10px auto 10px; padding:20px 26px;">
+    <h3>💡 핵심 아이디어</h3>
+    진혁이가 컬러본을 받으면 <strong>Dakota의 효과(줌/쉐이크/스피드램핑)를 적용하지 않은 "클린 버전"</strong>으로 4444XQ MOV를 VFX팀에 전달.
+    Dakota의 편집 의도(효과 데이터)는 별도로 보존하여 파이널 컨폼에서 적용.
+    <ul style="margin-top:10px;">
+      <li>VFX팀: 안정적인 클린 플레이트로 작업 → 트래킹/로토 정확도↑, 렌더시간↓</li>
+      <li>파이널 컨폼: VFX 완성본 위에 줌/쉐이크/스피드램핑 최종 적용</li>
+      <li>해상도: VFX는 3840×2160 기준 작업 가능 (EP 원안 반영)</li>
+    </ul>
+  </div>
+
+  <div class="pipeline">
+
+    <!-- R-Step 1 -->
+    <div class="step color-edit">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 01 — ON-SET + OFFLINE</div>
+        <div class="step-title">현장 편집 → Dakota 오프라인 편집</div>
+        <div class="step-desc">
+          기존과 동일. 진혁 감독 현장편집 → Dakota 추가 편집(줌/쉐이크/스피드램핑 포함).
+        </div>
+        <div class="step-person">👤 장진혁 → 👤 Dakota</div>
+      </div>
+    </div>
+
+    <!-- R-Step 2 -->
+    <div class="step color-edit">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 02 — RELINK &amp; DUAL EXPORT</div>
+        <div class="step-title">Relink → 이중 출력 (EDL + 효과 데이터)</div>
+        <div class="step-desc">
+          진혁이가 원본 Relink 후 <strong>두 가지를 분리 출력</strong>:<br>
+          ① <span class="highlight">클린 EDL</span> — 효과 미적용, 컬러실 전달용<br>
+          ② <span class="highlight">효과 메타데이터</span> — Dakota의 줌/포지셔닝/쉐이크/스피드램핑 데이터를 별도 보존 (Premiere 프로젝트 파일 or XML)
+        </div>
+        <div class="step-person">👤 장진혁 감독</div>
+        <div class="step-tech">출력: Clean EDL + Effect Reference Project</div>
+      </div>
+    </div>
+
+    <!-- R-Step 3 -->
+    <div class="step color-color">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 03 — COLOR</div>
+        <div class="step-title">컬러 그레이딩 (기존 동일)</div>
+        <div class="step-desc">
+          컬러리스트가 EDL 기반 원본 4608×3164 컬러 작업. 컬러된 클립을 팀에 반환.
+        </div>
+        <div class="step-person">🎨 Colorist</div>
+        <div class="step-tech">DaVinci Resolve — 4608×3164</div>
+      </div>
+    </div>
+
+    <!-- R-Step 4 — KEY CHANGE -->
+    <div class="step color-vfx">
+      <div class="step-dot"></div>
+      <div class="step-card" style="border-color: rgba(52,211,153,0.25);">
+        <div class="step-num">STEP 04 — 🔑 KEY CHANGE</div>
+        <div class="step-title">클린 플레이트 출력 → VFX 전달</div>
+        <div class="step-desc">
+          컬러본을 받아서 진혁이가 <strong class="good">효과 미적용 클린 버전</strong>으로 4444XQ MOV 출력.
+          <strong>줌/쉐이크/스피드램핑 없이</strong> VFX팀에 전달.<br><br>
+          해상도 옵션:<br>
+          • <span class="good">3840×2160</span>으로 리사이즈 후 출력 → 렌더시간 절약 (EP 원안)<br>
+          • 4608×3164 풀사이즈 → 최대 품질 유지 (컬러리스트 출력 그대로)<br><br>
+          <em>→ VFX 작업량과 일정에 따라 DQ/Giovi와 협의하여 결정</em>
+        </div>
+        <div class="step-person">👤 장진혁 → 🔧 DQ / Giovi</div>
+        <div class="step-tech">4444XQ MOV — NO effects applied (clean plate)</div>
+      </div>
+    </div>
+
+    <!-- R-Step 5 -->
+    <div class="step color-vfx">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 05 — VFX</div>
+        <div class="step-title">VFX / 3D 작업 (클린 플레이트 기반)</div>
+        <div class="step-desc">
+          클린 플레이트 기반이므로:<br>
+          • 트래킹 정확도 대폭 향상<br>
+          • 로토스코핑 작업시간 단축<br>
+          • 칪嘈라 수이크 없을 안정적 매치무빙<br>
+          • 스피드램핑 없이 일별한 프레임으로 작업 가능
+        </div>
+        <div class="step-person">🔧 DQ (VFX Lead) + VFX Team</div>
+        <div class="step-tech">Nuke / AE / 3D — clean plate workflow</div>
+      </div>
+    </div>
+
+    <!-- R-Step 6 — Final Conform -->
+    <div class="step color-conform">
+      <div class="step-dot"></div>
+      <div class="step-card" style="border-color: rgba(251,191,36,0.25);">
+        <div class="step-num">STEP 06 — FINAL CONFORM</div>
+        <div class="step-title">파이널 컨폼 — 효과 최종 적용</div>
+        <div class="step-desc">
+          VFX 완성븝bZ받아서 보존해두 Dakota의 효과 데이터를 기반으로 <span class="highlight">줌, 포지셔닝, 카메라 쉘이크, 스피드램핑</span>을 최종 적용.<br><br>
+          이 단계에서 VFX가 입혀진 상태 위에 효과가 올라가므로, VFX 결과물이 효과와 자연스럽게 통합됨.
+        </div>
+        <div class="step-person">👤 장진혁 / Conform Editor</div>
+        <div class="step-tech">Premiere/Resolve — Effect data re-applied on VFX comps</div>
+      </div>
+    </div>
+
+    <!-- R-Step 7 -->
+    <div class="step color-deliver">
+      <div class="step-dot"></div>
+      <div class="step-card">
+        <div class="step-num">STEP 07 — DELIVERY</div>
+        <div class="step-title">���스터링 &amp; 딜리버리</div>
+        <div class="step-desc">3840×2160 최종 마스터 출력 → 납품.</div>
+        <div class="step-person">📦 Ambience Inc.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="alert-box warning" style="max-width:860px; margin:0 auto 30px; padding:20px 26px;">
+    <h3>⚡ 진혁이한테 전달할 핵시 지시사항</h3>
+    <ul>
+      <li><strong>컬러본 수령 후:</strong> Dakota 효과 미적용 상태의 클린 타임라인으로 4444XQ MOV 출력 → VFX팀 전달</li>
+      <li><strong>Dakota 효과 데이터:</strong> Premiere 프로젝트 파일(또는 XML)로 줌/쉘이크/스피드램핑 데이터를 별도 보존 — 파이널 컨폼에서 사용</li>
+      <li><strong>해상도:</strong> DQ/Giovi와 3840×2160 vs 4608×3164 협의 후 결정</li>
+      <li><strong>스피드램핑 샷:</strong> VFX팀에 원속도(100%) 클릹으로 전달. 스피드 변경은 컨폼에서 적용</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== TAB 3: COMPARISON ==================== -->
+<div id="tab-compare" class="tab-content">
+
+  <div class="section-title">워크플로우 비교</div>
+  <div class="section-subtitle">현재 방식 vs. 권장 방식 (Giovi 제안 수용)</div>
+
+  <div class="compare-grid">
+    <div class="compare-box old">
+      <h4>❌ 현재 방식 (효과 적용 후 VFX)</h4>
+      <ol>
+        <li>현장편집 → Dakota 효과 추가</li>
+        <li>Relink → 클린 EDL 출력</li>
+        <li>컬러 그레이딩 (4608×3164)</li>
+        <li>컬런본에 <strong>효과 재적용</strong> → 4444XQ 출력</li>
+        <li style="color:#fca5a5;"><strong>VFX가 효과 적용된 상태에서 작업</strong></li>
+        <li>파이널 컨폼 → 둜리버리</li>
+      </ol>
+    </div>
+    <div class="compare-box new">
+      <h4>✅ 권장 방식 (클린 플레이트 → VFX → 컨폼)</h4>
+      <ol>
+        <li>현장편집 → Dakota 효과 추가</li>
+        <li>Relink → 클린 EDL + 효과 데이터 별도 보존</li>
+        <li>컬러 그레이딩 (4608×3164)</li>
+        <li style="color:#6ee7b7;"><strong>클린 플레이트로 4444XQ 출력 (효과 없이)</strong></li>
+        <li style="color:#6ee7b7;"><strong>VFX 클린 플레이트 기반 작업</strong></li>
+        <li style="color:#fcd34d;"><strong>파이널 컨폼에서 효과 최종 적용</strong></li>
+        <li>딜리버리</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:50px;">해상도별 영향 분석</div>
+  <div class="section-subtitle">VFX 렌더시간 및 작업효율성에 미치는 영향</div>
+
+  <table class="res-table">
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th>4608×3164 (원본)</th>
+        <th>3840×2160 (UHD)</th>
+        <th>비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>픽셀 수</td>
+        <td>~14.6M</td>
+        <td>~8.3M</td>
+        <td class="highlight">UHD가 43% 적음</td>
+      </tr>
+      <tr>
+        <td>렌더 시간 (예상)</td>
+        <td class="bad">기준 (1x)</td>
+        <td class="good">~0.57x</td>
+        <td>항셀 비례 단숈 계산</td>
+      </tr>
+      <tr>
+        <td>디스크 용량</td>
+        <td class="bad">훈</td>
+        <td class="good">약 43% 절약</td>
+        <td>4444XQ 기준</td>
+      </tr>
+      <tr>
+        <td>최종 둜리버리 품지</td>
+        <td>4K+ 여유</td>
+        <td>4K 정확 fit</td>
+        <td>최종이 3840 이면 차이 없음</td>
+      </tr>
+      <tr>
+        <td>줌/리프레임 여유</td>
+        <td class="good">있음 (~120%)</td>
+        <td class="bad">없음 (1:1)</td>
+        <td>컨폼에서 줌 적용 시 원본이 유리</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert-box info" style="max-width:860px; margin:30px auto; padding:20px 26px;">
+    <h3>📐 해상도 결정 가이드</h3>
+    <ul>
+      <li><strong>Dakota의 줌 정도가 큰 샷이 많다면:</strong> VFX도 4608×3164로 작업하는 것이 안전. 컨폼에서 줌 적용 시 해상도 손실 없음.</li>
+      <li><strong>줌이 미미하거나 대부분 쉘이크/스피드램핑 위주라면:</strong> 3840×2160으로 VFX 작업해도 무방. 렌더시간 대폭 절약.</li>
+      <li><strong>절충안:</strong> 줌이 큰 VFX 샷만 4608 기준, 나머지는 3840 기준 — 샷별 분류 필요.</li>
+    </ul>
+  </div>
+
+  <div class="alert-box success" style="max-width:860px; margin:20px auto 60px; padding:20px 26px;">
+    <h3>🎯 Giovi에게 회신 요약</h3>
+    "Yes — we'll deliver clean plates to VFX without the zoom/shake/speed ramp effects. Jin-hyuk will output the colored footage as clean 4444XQ MOVs, and we'll preserve Dakota's effect data separately. The zoom, camera shake, and speed ramp will be re-applied in the final conform stage after VFX is completed. Let's align on the resolution — are you okay with 3840×2160 for VFX plates, or do you need the full 4608×3164 for shots with significant reframing?"
+  </div>
+
+</div>
+
+<div class="footer">
+  ICONIC Post-Production Pipeline — Ambience Inc. / MATTER Lab — 2026.03
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
