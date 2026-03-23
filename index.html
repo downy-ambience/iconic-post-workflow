@@ -1554,15 +1554,15 @@
       var descEl = card.querySelector('.step-desc');
       var descKo = descEl.querySelector('.lang.ko');
       var descEn = descEl.querySelector('.lang.en');
-      if (descKo) descKo.innerHTML = data.descKo;
-      if (descEn) descEn.innerHTML = data.descEn || '';
+      if (descKo) descKo.textContent = data.descKo;
+      if (descEn) descEn.textContent = data.descEn || '';
     }
     if (data.person !== undefined) {
-      card.querySelector('.step-person').innerHTML = data.person;
+      card.querySelector('.step-person').textContent = data.person;
     }
     var techEl = card.querySelector('.step-tech');
     if (data.tech !== undefined && techEl) {
-      techEl.innerHTML = data.tech;
+      techEl.textContent = data.tech;
     }
   }
 
@@ -1609,13 +1609,15 @@
       tech: techEl ? techEl.innerHTML : ''
     };
 
-    // Extract current text values
-    var titleKo = titleEl.querySelector('.lang.ko') ? titleEl.querySelector('.lang.ko').textContent : '';
+    // Extract current text values (plain text only, no HTML tags)
+    var titleKo = titleEl.querySelector('.lang.ko') ? titleEl.querySelector('.lang.ko').textContent : titleEl.textContent;
     var titleEn = titleEl.querySelector('.lang.en') ? titleEl.querySelector('.lang.en').textContent : '';
-    var descKo = descEl.querySelector('.lang.ko') ? descEl.querySelector('.lang.ko').innerHTML : '';
-    var descEn = descEl.querySelector('.lang.en') ? descEl.querySelector('.lang.en').innerHTML : '';
-    var personText = personEl.innerHTML;
-    var techText = techEl ? techEl.innerHTML : '';
+    var descKoEl = descEl.querySelector('.lang.ko');
+    var descEnEl = descEl.querySelector('.lang.en');
+    var descKo = descKoEl ? descKoEl.textContent : descEl.textContent;
+    var descEn = descEnEl ? descEnEl.textContent : '';
+    var personText = personEl.textContent;
+    var techText = techEl ? techEl.textContent : '';
 
     // Replace with edit fields using DOM creation to avoid escaping issues
     var stepNumText = stepNum.textContent;
@@ -1632,20 +1634,20 @@
     titleEl.appendChild(tkLabel); titleEl.appendChild(tkInput); titleEl.appendChild(teLabel); titleEl.appendChild(teInput);
 
     descEl.innerHTML = '';
-    var descKoLabel = document.createElement('div'); descKoLabel.className = 'edit-field-label'; descKoLabel.textContent = 'Description (KO) — HTML OK';
+    var descKoLabel = document.createElement('div'); descKoLabel.className = 'edit-field-label'; descKoLabel.textContent = '설명 (한국어)';
     var descKoArea = document.createElement('textarea'); descKoArea.className = 'edit-field'; descKoArea.rows = 4; descKoArea.setAttribute('data-field', 'descKo'); descKoArea.value = descKo;
-    var descEnLabel = document.createElement('div'); descEnLabel.className = 'edit-field-label'; descEnLabel.textContent = 'Description (EN) — HTML OK';
+    var descEnLabel = document.createElement('div'); descEnLabel.className = 'edit-field-label'; descEnLabel.textContent = 'Description (EN)';
     var descEnArea = document.createElement('textarea'); descEnArea.className = 'edit-field'; descEnArea.rows = 4; descEnArea.setAttribute('data-field', 'descEn'); descEnArea.value = descEn;
     descEl.appendChild(descKoLabel); descEl.appendChild(descKoArea); descEl.appendChild(descEnLabel); descEl.appendChild(descEnArea);
 
     personEl.innerHTML = '';
-    var personLabel = document.createElement('div'); personLabel.className = 'edit-field-label'; personLabel.textContent = 'Person — HTML OK';
+    var personLabel = document.createElement('div'); personLabel.className = 'edit-field-label'; personLabel.textContent = '담당자';
     var personInput = document.createElement('input'); personInput.className = 'edit-field'; personInput.type = 'text'; personInput.setAttribute('data-field', 'person'); personInput.value = personText;
     personEl.appendChild(personLabel); personEl.appendChild(personInput);
 
     if (techEl) {
       techEl.innerHTML = '';
-      var techLabel = document.createElement('div'); techLabel.className = 'edit-field-label'; techLabel.textContent = 'Tech — HTML OK';
+      var techLabel = document.createElement('div'); techLabel.className = 'edit-field-label'; techLabel.textContent = '기술 스펙';
       var techInput = document.createElement('input'); techInput.className = 'edit-field'; techInput.type = 'text'; techInput.setAttribute('data-field', 'tech'); techInput.value = techText;
       techEl.appendChild(techLabel); techEl.appendChild(techInput);
     }
@@ -1711,22 +1713,25 @@
       card.classList.remove('editing');
       delete card._originalHTML;
 
-      // Rebuild the card content with new values
+      // Rebuild the card content with new values (plain text, properly escaped)
       card.querySelector('.step-num').textContent = fields.stepNum || '';
 
       var titleEl = card.querySelector('.step-title');
-      titleEl.innerHTML = '<span class="lang ko">' + escapeHtml(fields.titleKo || '') + '</span>' +
-        '<span class="lang en">' + escapeHtml(fields.titleEn || '') + '</span>';
+      titleEl.innerHTML = '<span class="lang ko"></span><span class="lang en"></span>';
+      titleEl.querySelector('.lang.ko').textContent = fields.titleKo || '';
+      titleEl.querySelector('.lang.en').textContent = fields.titleEn || '';
 
       var descEl = card.querySelector('.step-desc');
-      descEl.innerHTML = '<span class="lang ko">' + (fields.descKo || '') + '</span>' +
-        '<span class="lang en">' + (fields.descEn || '') + '</span>';
+      descEl.innerHTML = '<span class="lang ko"></span><span class="lang en"></span>';
+      descEl.querySelector('.lang.ko').textContent = fields.descKo || '';
+      descEl.querySelector('.lang.en').textContent = fields.descEn || '';
 
-      card.querySelector('.step-person').innerHTML = fields.person || '';
+      var personEl = card.querySelector('.step-person');
+      personEl.textContent = fields.person || '';
 
       var techEl = card.querySelector('.step-tech');
       if (techEl) {
-        techEl.innerHTML = fields.tech || '';
+        techEl.textContent = fields.tech || '';
       }
 
       // Re-show edit button
