@@ -52,6 +52,53 @@
     text-transform: uppercase;
   }
 
+  /* Language Toggle */
+  .lang-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-top: 18px;
+  }
+
+  .lang-btn {
+    padding: 6px 18px;
+    border: 1px solid rgba(99,102,241,0.3);
+    background: transparent;
+    color: #64748b;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .lang-btn:first-child { border-radius: 6px 0 0 6px; }
+  .lang-btn:last-child { border-radius: 0 6px 6px 0; }
+
+  .lang-btn.active {
+    background: rgba(99,102,241,0.2);
+    color: #a5b4fc;
+    border-color: #6366f1;
+  }
+
+  /* Language display control */
+  .lang.en { display: none; }
+  body.en .lang.ko { display: none; }
+  body.en .lang.en { display: inline; }
+  body.en div.lang.en,
+  body.en li.lang.en,
+  body.en p.lang.en,
+  body.en h3.lang.en,
+  body.en tr.lang.en,
+  body.en span.lang.en { display: block; }
+  body.en span.lang.en { display: inline; }
+  body.en div.lang.ko,
+  body.en li.lang.ko,
+  body.en p.lang.ko,
+  body.en h3.lang.ko,
+  body.en tr.lang.ko { display: none; }
+
   /* Tab Navigation */
   .tab-nav {
     display: flex;
@@ -436,23 +483,34 @@
 
 <div class="header">
   <h1>ICONIC — Post-Production Pipeline</h1>
-  <p>Workflow Architecture &amp; Resolution Strategy</p>
+  <p><span class="lang ko">Workflow Architecture &amp; Resolution Strategy</span><span class="lang en">Workflow Architecture &amp; Resolution Strategy</span></p>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="switchLang('ko')">KR</button>
+    <button class="lang-btn" onclick="switchLang('en')">EN</button>
+  </div>
 </div>
 
 <!-- Tab Navigation -->
 <div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('current')">현재 워크플로우</button>
-  <button class="tab-btn" onclick="switchTab('recommended')">권장 워크플로우 <span class="badge">NEW</span></button>
-  <button class="tab-btn" onclick="switchTab('compare')">비교 분석</button>
+  <button class="tab-btn active" onclick="switchTab('current', this)">
+    <span class="lang ko">현재 워크플로우</span><span class="lang en">Current Workflow</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('recommended', this)">
+    <span class="lang ko">권장 워크플로우</span><span class="lang en">Recommended</span> <span class="badge">NEW</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('compare', this)">
+    <span class="lang ko">비교 분석</span><span class="lang en">Comparison</span>
+  </button>
 </div>
 
 <!-- ==================== TAB 1: CURRENT WORKFLOW ==================== -->
 <div id="tab-current" class="tab-content active">
 
   <div class="alert-box warning" style="max-width:860px; margin:30px auto 10px; padding:20px 26px;">
-    <h3>⚠ 현재 문제점 요약</h3>
-    Dakota의 편집본에 줌/포지셔닝/카메라쉐이크/스피드램핑이 적용된 상태에서, 이 효과가 VFX 트래킹 & 로토 작업을 방해함.
-    컬러리스트는 EDL 기반 원본 작업을 원하고, VFX팀(Giovi/DQ)은 클린 플레이트를 원하는 상충 발생.
+    <h3 class="lang ko">⚠ 현재 문제점 요약</h3>
+    <h3 class="lang en">⚠ Current Issue Summary</h3>
+    <span class="lang ko">Dakota의 편집본에 줌/포지셔닝/카메라쉐이크/스피드램핑이 적용된 상태에서, 이 효과가 VFX 트래킹 &amp; 로토 작업을 방해함. 컬러리스트는 EDL 기반 원본 작업을 원하고, VFX팀(Giovi/DQ)은 클린 플레이트를 원하는 상충 발생.</span>
+    <span class="lang en">Dakota's edit has zoom/repositioning/camera shake/speed ramping applied, which interferes with VFX tracking &amp; roto work. The colorist wants EDL-based original footage, while the VFX team (Giovi/DQ) wants clean plates — creating a conflict.</span>
   </div>
 
   <div class="pipeline">
@@ -462,12 +520,16 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 01 — ON-SET</div>
-        <div class="step-title">현장 편집 (On-Set Edit)</div>
-        <div class="step-desc">
-          현장에서 촬영본을 바로 조합하여 1차 편집본 완성. 연출감독과 현장에서 실시간 논의하며 컷 확정.
+        <div class="step-title">
+          <span class="lang ko">현장 편집 (On-Set Edit)</span>
+          <span class="lang en">On-Set Edit</span>
         </div>
-        <div class="step-person">👤 장진혁 감독 (Editor)</div>
-        <div class="step-tech">Premiere Pro / DaVinci — 원본 4608×3164 footage</div>
+        <div class="step-desc">
+          <span class="lang ko">현장에서 촬영본을 바로 조합하여 1차 편집본 완성. 연출감독과 현장에서 실시간 논의하며 컷 확정.</span>
+          <span class="lang en">Assemble footage on-set for the first cut. Finalize cuts through real-time discussions with the director on location.</span>
+        </div>
+        <div class="step-person">👤 <span class="lang ko">장진혁 감독 (Editor)</span><span class="lang en">Director Jin-hyuk Jang (Editor)</span></div>
+        <div class="step-tech">Premiere Pro / DaVinci — <span class="lang ko">원본</span><span class="lang en">Original</span> 4608×3164 footage</div>
       </div>
     </div>
 
@@ -476,12 +538,16 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 02 — OFFLINE EDIT</div>
-        <div class="step-title">오프라인 추가 편집 (LA)</div>
-        <div class="step-desc">
-          Dakota가 코디와 함께 프레임 단위 수정 및 <span class="highlight">디지털 줌, 포지셔닝, 카메라 쉐이킹, 스피드램핑</span> 효과 추가. 3840×2160 시퀀스 기준으로 작업하여 원본 4608×3164 대비 충분한 해상도 여유 확보.
+        <div class="step-title">
+          <span class="lang ko">오프라인 추가 편집 (LA)</span>
+          <span class="lang en">Offline Edit (LA)</span>
         </div>
-        <div class="step-person">👤 Dakota (LA Editor) + 코디</div>
-        <div class="step-tech">저해상 MP4 프록시로 편집 → 3840×2160 sequence</div>
+        <div class="step-desc">
+          <span class="lang ko">Dakota가 코디와 함께 프레임 단위 수정 및 <span class="highlight">디지털 줌, 포지셔닝, 카메라 쉐이킹, 스피드램핑</span> 효과 추가. 3840×2160 시퀀스 기준으로 작업하여 원본 4608×3164 대비 충분한 해상도 여유 확보.</span>
+          <span class="lang en">Dakota and Cody make frame-level adjustments and add <span class="highlight">digital zoom, repositioning, camera shake, speed ramping</span> effects. Working on a 3840×2160 sequence provides sufficient resolution headroom against the original 4608×3164.</span>
+        </div>
+        <div class="step-person">👤 Dakota (LA Editor) + <span class="lang ko">코디</span><span class="lang en">Cody</span></div>
+        <div class="step-tech"><span class="lang ko">저해상 MP4 프록시로 편집</span><span class="lang en">Edited with low-res MP4 proxies</span> → 3840×2160 sequence</div>
       </div>
     </div>
 
@@ -490,11 +556,15 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 03 — RELINK</div>
-        <div class="step-title">원본 Relink &amp; EDL 출력</div>
-        <div class="step-desc">
-          Dakota가 4444XQ 다운로드 불가 → 저해상 MP4로 편집한 프로젝트를 진혁이가 받아서 원본 푸티지(4608×3164)로 Relink. 줌/포지셔닝/스피드램핑 효과를 제거하고 <span class="highlight">클린 EDL</span>로 컬러실에 전달.
+        <div class="step-title">
+          <span class="lang ko">원본 Relink &amp; EDL 출력</span>
+          <span class="lang en">Source Relink &amp; EDL Export</span>
         </div>
-        <div class="step-person">👤 장진혁 감독</div>
+        <div class="step-desc">
+          <span class="lang ko">Dakota가 4444XQ 다운로드 불가 → 저해상 MP4로 편집한 프로젝트를 진혁이가 받아서 원본 푸티지(4608×3164)로 Relink. 줌/포지셔닝/스피드램핑 효과를 제거하고 <span class="highlight">클린 EDL</span>로 컬러실에 전달.</span>
+          <span class="lang en">Dakota can't download 4444XQ → Jin-hyuk receives the project edited with low-res MP4, relinks to original footage (4608×3164). Strips zoom/repositioning/speed ramp effects and delivers a <span class="highlight">clean EDL</span> to the color suite.</span>
+        </div>
+        <div class="step-person">👤 <span class="lang ko">장진혁 감독</span><span class="lang en">Director Jin-hyuk Jang</span></div>
         <div class="step-tech">EDL export — effects stripped</div>
       </div>
     </div>
@@ -504,12 +574,16 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 04 — COLOR</div>
-        <div class="step-title">컬러 그레이딩</div>
+        <div class="step-title">
+          <span class="lang ko">컬러 그레이딩</span>
+          <span class="lang en">Color Grading</span>
+        </div>
         <div class="step-desc">
-          컬러리스트가 EDL로 원본 4608×3164 푸티지를 불러와서 풀 해상도 컬러 작업 진행. 컬러된 푸티지를 팀에 전달.
+          <span class="lang ko">컬러리스트가 EDL로 원본 4608×3164 푸티지를 불러와서 풀 해상도 컬러 작업 진행. 컬러된 푸티지를 팀에 전달.</span>
+          <span class="lang en">The colorist imports original 4608×3164 footage via EDL and performs full-resolution color work. Delivers colored footage to the team.</span>
         </div>
         <div class="step-person">🎨 Colorist</div>
-        <div class="step-tech">DaVinci Resolve — 4608×3164 원본 기준 컬러</div>
+        <div class="step-tech">DaVinci Resolve — 4608×3164 <span class="lang ko">원본 기준 컬러</span><span class="lang en">original-based color</span></div>
       </div>
     </div>
 
@@ -518,13 +592,18 @@
       <div class="step-dot"></div>
       <div class="step-card" style="border-color: rgba(248,113,113,0.2);">
         <div class="step-num">STEP 05 — ⚠ BOTTLENECK</div>
-        <div class="step-title">컬러본 재편집 → VFX 전달</div>
-        <div class="step-desc">
-          컬러된 푸티지를 받아서 진혁이가 다시 편집본 재구성. Dakota의 줌/쉐이크/스피드램핑을 <span class="bad">다시 적용</span>하여 4444XQ MOV 출력 → VFX팀 전달.<br><br>
-          <strong class="bad">문제:</strong> VFX팀이 트래킹/로토 작업 시 줌·쉐이크·스피드램핑이 적용된 상태면 작업 난이도와 시간이 급격히 증가. Giovi가 "효과를 파이널 컨폼 단계로 미뤄달라"고 요청한 이유.
+        <div class="step-title">
+          <span class="lang ko">컬러본 재편집 → VFX 전달</span>
+          <span class="lang en">Re-edit Colored Footage → VFX Handoff</span>
         </div>
-        <div class="step-person">👤 장진혁 → 🔧 DQ (VFX Lead) / Giovi (Post Producer)</div>
-        <div class="step-tech">출력: 4444XQ MOV — 줌/쉐이크 포함 여부가 핵심 이슈</div>
+        <div class="step-desc">
+          <span class="lang ko">컬러된 푸티지를 받아서 진혁이가 다시 편집본 재구성. Dakota의 줌/쉐이크/스피드램핑을 <span class="bad">다시 적용</span>하여 4444XQ MOV 출력 → VFX팀 전달.<br><br>
+          <strong class="bad">문제:</strong> VFX팀이 트래킹/로토 작업 시 줌·쉐이크·스피드램핑이 적용된 상태면 작업 난이도와 시간이 급격히 증가. Giovi가 "효과를 파이널 컨폼 단계로 미뤄달라"고 요청한 이유.</span>
+          <span class="lang en">Jin-hyuk receives colored footage and reassembles the edit. <span class="bad">Re-applies</span> Dakota's zoom/shake/speed ramping → exports 4444XQ MOV → delivers to VFX team.<br><br>
+          <strong class="bad">Problem:</strong> When the VFX team does tracking/roto work on footage with zoom, shake, and speed ramping applied, difficulty and time increase dramatically. This is why Giovi requested "move effects to the final conform stage."</span>
+        </div>
+        <div class="step-person">👤 <span class="lang ko">장진혁</span><span class="lang en">Jin-hyuk</span> → 🔧 DQ (VFX Lead) / Giovi (Post Producer)</div>
+        <div class="step-tech"><span class="lang ko">출력</span><span class="lang en">Output</span>: 4444XQ MOV — <span class="lang ko">줌/쉐이크 포함 여부가 핵심 이슈</span><span class="lang en">zoom/shake inclusion is the key issue</span></div>
       </div>
     </div>
 
@@ -533,10 +612,13 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 06 — VFX</div>
-        <div class="step-title">VFX / 3D 작업</div>
+        <div class="step-title">
+          <span class="lang ko">VFX / 3D 작업</span>
+          <span class="lang en">VFX / 3D Work</span>
+        </div>
         <div class="step-desc">
-          DQ와 VFX팀이 컬러된 편집본 기반으로 합성, 3D, 로토스코핑, 트래m�� 등 진행.
-          해상도가 클수록 렌더 시간↑, 작업 복잡도↑.
+          <span class="lang ko">DQ와 VFX팀이 컬러된 편집본 기반으로 합성, 3D, 로토스코핑, 트래킹 등 진행. 해상도가 클수록 렌더 시간↑, 작업 복잡도↑.</span>
+          <span class="lang en">DQ and the VFX team perform compositing, 3D, rotoscoping, tracking, etc. based on the colored edit. Higher resolution = longer render times and increased complexity.</span>
         </div>
         <div class="step-person">🔧 DQ (VFX Lead) + VFX Team</div>
         <div class="step-tech">Nuke / After Effects / 3D Software</div>
@@ -548,12 +630,16 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 07 — CONFORM</div>
-        <div class="step-title">파이널 컨폼 &amp; 마스터링</div>
-        <div class="step-desc">
-          VFX 완성본 + 컬러본을 합쳐서 최종 마스터. 줌/쉐이크/스피드램쥑 효과를 이 단계에서 적용할 것인지가 핵심 의사결정 포인트.
+        <div class="step-title">
+          <span class="lang ko">파이널 컨폼 &amp; 마스터링</span>
+          <span class="lang en">Final Conform &amp; Mastering</span>
         </div>
-        <div class="step-person">👤 장진혁 / Conform Editor</div>
-        <div class="step-tech">최종 출력: 3840×2160 마스터</div>
+        <div class="step-desc">
+          <span class="lang ko">VFX 완성본 + 컬러본을 합쳐서 최종 마스터. 줌/쉐이크/스피드램핑 효과를 이 단계에서 적용할 것인지가 핵심 의사결정 포인트.</span>
+          <span class="lang en">Combine VFX finals + colored footage for the final master. Whether to apply zoom/shake/speed ramping at this stage is the key decision point.</span>
+        </div>
+        <div class="step-person">👤 <span class="lang ko">장진혁</span><span class="lang en">Jin-hyuk</span> / Conform Editor</div>
+        <div class="step-tech"><span class="lang ko">최종 출력</span><span class="lang en">Final output</span>: 3840×2160 <span class="lang ko">마스터</span><span class="lang en">master</span></div>
       </div>
     </div>
 
@@ -562,9 +648,13 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 08 — DELIVERY</div>
-        <div class="step-title">최종 딜리버리</div>
+        <div class="step-title">
+          <span class="lang ko">최종 딜리버리</span>
+          <span class="lang en">Final Delivery</span>
+        </div>
         <div class="step-desc">
-          마스터링 완료 후 각 플랫폼별 스펙에 맞춰 최종 파일 출력 및 납품.
+          <span class="lang ko">마스터링 완료 후 각 플랫폼별 스펙에 맞춰 최종 파일 출력 및 납품.</span>
+          <span class="lang en">After mastering, export and deliver final files according to each platform's specifications.</span>
         </div>
         <div class="step-person">📦 Ambience Inc.</div>
       </div>
@@ -577,20 +667,33 @@
 <div id="tab-recommended" class="tab-content">
 
   <div class="alert-box success" style="max-width:860px; margin:30px auto 10px; padding:20px 26px;">
-    <h3>✅ 권장안: "Clean Plate → VFX → Final Conform" 방식</h3>
-    Giovi의 제안을 수용하여, 줌/쉐이크/스피드램핑을 VFX 이후 파이널 컨폼 단계에서 적용하는 워크플로우.
-    VFX팀에는 <strong>클린 플레이트</strong>만 전달하여 트래m��/로토 효율을 극대화.
+    <h3 class="lang ko">✅ 권장안: "Clean Plate → VFX → Final Conform" 방식</h3>
+    <h3 class="lang en">✅ Recommended: "Clean Plate → VFX → Final Conform" Approach</h3>
+    <span class="lang ko">Giovi의 제안을 수용하여, 줌/쉐이크/스피드램핑을 VFX 이후 파이널 컨폼 단계에서 적용하는 워크플로우. VFX팀에는 <strong>클린 플레이트</strong>만 전달하여 트래킹/로토 효율을 극대화.</span>
+    <span class="lang en">Adopting Giovi's proposal: a workflow where zoom/shake/speed ramping is applied in the final conform stage after VFX. Only <strong>clean plates</strong> are delivered to the VFX team, maximizing tracking/roto efficiency.</span>
   </div>
 
   <div class="alert-box info" style="max-width:860px; margin:10px auto 10px; padding:20px 26px;">
-    <h3>💡 핵심 아이디어</h3>
-    진혁이가 컬러본을 받으면 <strong>Dakota의 효과(줌/쉐이크/스피드램핑)를 적용하지 않은 "클린 버전"</strong>으로 4444XQ MOV를 VFX팀에 전달.
-    Dakota의 편집 의도(효과 데이터)는 별도로 보존하여 파이널 컨폼에서 적용.
-    <ul style="margin-top:10px;">
-      <li>VFX팀: 안정적인 클린 플레이트로 작업 → 트래킹/로토 정확도↑, 렌더시간↓</li>
-      <li>파이널 컨폼: VFX 완성본 위에 줌/쉐이크/스피드램핑 최종 적용</li>
-      <li>해상도: VFX는 3840×2160 기준 작업 가능 (EP 원안 반영)</li>
-    </ul>
+    <h3 class="lang ko">💡 핵심 아이디어</h3>
+    <h3 class="lang en">💡 Core Idea</h3>
+    <div class="lang ko">
+      진혁이가 컬러본을 받으면 <strong>Dakota의 효과(줌/쉐이크/스피드램핑)를 적용하지 않은 "클린 버전"</strong>으로 4444XQ MOV를 VFX팀에 전달.
+      Dakota의 편집 의도(효과 데이터)는 별도로 보존하여 파이널 컨폼에서 적용.
+      <ul style="margin-top:10px;">
+        <li>VFX팀: 안정적인 클린 플레이트로 작업 → 트래킹/로토 정확도↑, 렌더시간↓</li>
+        <li>파이널 컨폼: VFX 완성본 위에 줌/쉐이크/스피드램핑 최종 적용</li>
+        <li>해상도: VFX는 3840×2160 기준 작업 가능 (EP 원안 반영)</li>
+      </ul>
+    </div>
+    <div class="lang en">
+      When Jin-hyuk receives the colored footage, he delivers 4444XQ MOV to the VFX team as a <strong>"clean version" without Dakota's effects (zoom/shake/speed ramping)</strong>.
+      Dakota's editorial intent (effect data) is preserved separately and applied in final conform.
+      <ul style="margin-top:10px;">
+        <li>VFX team: Work with stable clean plates → tracking/roto accuracy↑, render time↓</li>
+        <li>Final conform: Apply zoom/shake/speed ramping on top of completed VFX</li>
+        <li>Resolution: VFX can work at 3840×2160 (per EP's original plan)</li>
+      </ul>
+    </div>
   </div>
 
   <div class="pipeline">
@@ -600,11 +703,15 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 01 — ON-SET + OFFLINE</div>
-        <div class="step-title">현장 편집 → Dakota 오프라인 편집</div>
-        <div class="step-desc">
-          기존과 동일. 진혁 감독 현장편집 → Dakota 추가 편집(줌/쉐이크/스피드램핑 포함).
+        <div class="step-title">
+          <span class="lang ko">현장 편집 → Dakota 오프라인 편집</span>
+          <span class="lang en">On-Set Edit → Dakota Offline Edit</span>
         </div>
-        <div class="step-person">👤 장진혁 → 👤 Dakota</div>
+        <div class="step-desc">
+          <span class="lang ko">기존과 동일. 진혁 감독 현장편집 → Dakota 추가 편집(줌/쉐이크/스피드램핑 포함).</span>
+          <span class="lang en">Same as current. Director Jin-hyuk's on-set edit → Dakota's additional edit (including zoom/shake/speed ramping).</span>
+        </div>
+        <div class="step-person">👤 <span class="lang ko">장진혁</span><span class="lang en">Jin-hyuk</span> → 👤 Dakota</div>
       </div>
     </div>
 
@@ -613,14 +720,20 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 02 — RELINK &amp; DUAL EXPORT</div>
-        <div class="step-title">Relink → 이중 출력 (EDL + 효과 데이터)</div>
-        <div class="step-desc">
-          진혁이가 원본 Relink 후 <strong>두 가지를 분리 출력</strong>:<br>
-          ① <span class="highlight">클린 EDL</span> — 효과 미적용, 컬러실 전달용<br>
-          ② <span class="highlight">효과 메타데이터</span> — Dakota의 줌/포지셔닝/쉐이크/스피드램핑 데이터를 별도 보존 (Premiere 프로젝트 파일 or XML)
+        <div class="step-title">
+          <span class="lang ko">Relink → 이중 출력 (EDL + 효과 데이터)</span>
+          <span class="lang en">Relink → Dual Export (EDL + Effect Data)</span>
         </div>
-        <div class="step-person">👤 장진혁 감독</div>
-        <div class="step-tech">출력: Clean EDL + Effect Reference Project</div>
+        <div class="step-desc">
+          <span class="lang ko">진혁이가 원본 Relink 후 <strong>두 가지를 분리 출력</strong>:<br>
+          ① <span class="highlight">클린 EDL</span> — 효과 미적용, 컬러실 전달용<br>
+          ② <span class="highlight">효과 메타데이터</span> — Dakota의 줌/포지셔닝/쉐이크/스피드램핑 데이터를 별도 보존 (Premiere 프로젝트 파일 or XML)</span>
+          <span class="lang en">After Jin-hyuk relinks to originals, <strong>two separate exports</strong>:<br>
+          ① <span class="highlight">Clean EDL</span> — no effects applied, for the color suite<br>
+          ② <span class="highlight">Effect metadata</span> — Dakota's zoom/repositioning/shake/speed ramp data preserved separately (Premiere project file or XML)</span>
+        </div>
+        <div class="step-person">👤 <span class="lang ko">장진혁 감독</span><span class="lang en">Director Jin-hyuk Jang</span></div>
+        <div class="step-tech"><span class="lang ko">출력</span><span class="lang en">Output</span>: Clean EDL + Effect Reference Project</div>
       </div>
     </div>
 
@@ -629,9 +742,13 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 03 — COLOR</div>
-        <div class="step-title">컬러 그레이딩 (기존 동일)</div>
+        <div class="step-title">
+          <span class="lang ko">컬러 그레이딩 (기존 동일)</span>
+          <span class="lang en">Color Grading (Same as Before)</span>
+        </div>
         <div class="step-desc">
-          컬러리스트가 EDL 기반 원본 4608×3164 컬러 작업. 컬러된 클립을 팀에 반환.
+          <span class="lang ko">컬러리스트가 EDL 기반 원본 4608×3164 컬러 작업. 컬러된 클립을 팀에 반환.</span>
+          <span class="lang en">Colorist performs EDL-based color work on original 4608×3164 footage. Returns colored clips to the team.</span>
         </div>
         <div class="step-person">🎨 Colorist</div>
         <div class="step-tech">DaVinci Resolve — 4608×3164</div>
@@ -643,16 +760,25 @@
       <div class="step-dot"></div>
       <div class="step-card" style="border-color: rgba(52,211,153,0.25);">
         <div class="step-num">STEP 04 — 🔑 KEY CHANGE</div>
-        <div class="step-title">클린 플레이트 출력 → VFX 전달</div>
+        <div class="step-title">
+          <span class="lang ko">클린 플레이트 출력 → VFX 전달</span>
+          <span class="lang en">Clean Plate Export → VFX Handoff</span>
+        </div>
         <div class="step-desc">
-          컬러본을 받아서 진혁이가 <strong class="good">효과 미적용 클린 버전</strong>으로 4444XQ MOV 출력.
+          <span class="lang ko">컬러본을 받아서 진혁이가 <strong class="good">효과 미적용 클린 버전</strong>으로 4444XQ MOV 출력.
           <strong>줌/쉐이크/스피드램핑 없이</strong> VFX팀에 전달.<br><br>
           해상도 옵션:<br>
           • <span class="good">3840×2160</span>으로 리사이즈 후 출력 → 렌더시간 절약 (EP 원안)<br>
           • 4608×3164 풀사이즈 → 최대 품질 유지 (컬러리스트 출력 그대로)<br><br>
-          <em>→ VFX 작업량과 일정에 따라 DQ/Giovi와 협의하여 결정</em>
+          <em>→ VFX 작업량과 일정에 따라 DQ/Giovi와 협의하여 결정</em></span>
+          <span class="lang en">Jin-hyuk receives colored footage and exports 4444XQ MOV as a <strong class="good">clean version without effects</strong>.
+          Delivered to VFX team <strong>without zoom/shake/speed ramping</strong>.<br><br>
+          Resolution options:<br>
+          • <span class="good">3840×2160</span> resized export → saves render time (EP's original plan)<br>
+          • 4608×3164 full size → maximum quality preserved (colorist output as-is)<br><br>
+          <em>→ Decide in consultation with DQ/Giovi based on VFX workload and schedule</em></span>
         </div>
-        <div class="step-person">👤 장진혁 → 🔧 DQ / Giovi</div>
+        <div class="step-person">👤 <span class="lang ko">장진혁</span><span class="lang en">Jin-hyuk</span> → 🔧 DQ / Giovi</div>
         <div class="step-tech">4444XQ MOV — NO effects applied (clean plate)</div>
       </div>
     </div>
@@ -662,13 +788,21 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 05 — VFX</div>
-        <div class="step-title">VFX / 3D 작업 (클린 플레이트 기반)</div>
+        <div class="step-title">
+          <span class="lang ko">VFX / 3D 작업 (클린 플레이트 기반)</span>
+          <span class="lang en">VFX / 3D Work (Clean Plate Based)</span>
+        </div>
         <div class="step-desc">
-          클린 플레이트 기반이므로:<br>
+          <span class="lang ko">클린 플레이트 기반이므로:<br>
           • 트래킹 정확도 대폭 향상<br>
           • 로토스코핑 작업시간 단축<br>
-          • 칪嘈라 수이크 없을 안정적 매치무빙<br>
-          • 스피드램핑 없이 일별한 프레임으로 작업 가능
+          • 카메라 쉐이크 없이 안정적 매치무빙<br>
+          • 스피드램핑 없이 일정한 프레임으로 작업 가능</span>
+          <span class="lang en">Based on clean plates, benefits include:<br>
+          • Significantly improved tracking accuracy<br>
+          • Reduced rotoscoping work time<br>
+          • Stable matchmoving without camera shake<br>
+          • Consistent frame rate without speed ramping</span>
         </div>
         <div class="step-person">🔧 DQ (VFX Lead) + VFX Team</div>
         <div class="step-tech">Nuke / AE / 3D — clean plate workflow</div>
@@ -680,12 +814,17 @@
       <div class="step-dot"></div>
       <div class="step-card" style="border-color: rgba(251,191,36,0.25);">
         <div class="step-num">STEP 06 — FINAL CONFORM</div>
-        <div class="step-title">파이널 컨폼 — 효과 최종 적용</div>
-        <div class="step-desc">
-          VFX 완성븝bZ받아서 보존해두 Dakota의 효과 데이터를 기반으로 <span class="highlight">줌, 포지셔닝, 카메라 쉘이크, 스피드램핑</span>을 최종 적용.<br><br>
-          이 단계에서 VFX가 입혀진 상태 위에 효과가 올라가므로, VFX 결과물이 효과와 자연스럽게 통합됨.
+        <div class="step-title">
+          <span class="lang ko">파이널 컨폼 — 효과 최종 적용</span>
+          <span class="lang en">Final Conform — Apply Effects</span>
         </div>
-        <div class="step-person">👤 장진혁 / Conform Editor</div>
+        <div class="step-desc">
+          <span class="lang ko">VFX 완성본을 받아서 보존해둔 Dakota의 효과 데이터를 기반으로 <span class="highlight">줌, 포지셔닝, 카메라 쉐이크, 스피드램핑</span>을 최종 적용.<br><br>
+          이 단계에서 VFX가 입혀진 상태 위에 효과가 올라가므로, VFX 결과물이 효과와 자연스럽게 통합됨.</span>
+          <span class="lang en">Receive VFX finals and re-apply <span class="highlight">zoom, repositioning, camera shake, speed ramping</span> based on Dakota's preserved effect data.<br><br>
+          At this stage, effects are layered on top of VFX-completed footage, so VFX results integrate naturally with the effects.</span>
+        </div>
+        <div class="step-person">👤 <span class="lang ko">장진혁</span><span class="lang en">Jin-hyuk</span> / Conform Editor</div>
         <div class="step-tech">Premiere/Resolve — Effect data re-applied on VFX comps</div>
       </div>
     </div>
@@ -695,8 +834,14 @@
       <div class="step-dot"></div>
       <div class="step-card">
         <div class="step-num">STEP 07 — DELIVERY</div>
-        <div class="step-title">���스터링 &amp; 딜리버리</div>
-        <div class="step-desc">3840×2160 최종 마스터 출력 → 납품.</div>
+        <div class="step-title">
+          <span class="lang ko">마스터링 &amp; 딜리버리</span>
+          <span class="lang en">Mastering &amp; Delivery</span>
+        </div>
+        <div class="step-desc">
+          <span class="lang ko">3840×2160 최종 마스터 출력 → 납품.</span>
+          <span class="lang en">3840×2160 final master output → delivery.</span>
+        </div>
         <div class="step-person">📦 Ambience Inc.</div>
       </div>
     </div>
@@ -704,12 +849,17 @@
   </div>
 
   <div class="alert-box warning" style="max-width:860px; margin:0 auto 30px; padding:20px 26px;">
-    <h3>⚡ 진혁이한테 전달할 핵시 지시사항</h3>
+    <h3 class="lang ko">⚡ 진혁이한테 전달할 핵심 지시사항</h3>
+    <h3 class="lang en">⚡ Key Instructions for Jin-hyuk</h3>
     <ul>
-      <li><strong>컬러본 수령 후:</strong> Dakota 효과 미적용 상태의 클린 타임라인으로 4444XQ MOV 출력 → VFX팀 전달</li>
-      <li><strong>Dakota 효과 데이터:</strong> Premiere 프로젝트 파일(또는 XML)로 줌/쉘이크/스피드램핑 데이터를 별도 보존 — 파이널 컨폼에서 사용</li>
-      <li><strong>해상도:</strong> DQ/Giovi와 3840×2160 vs 4608×3164 협의 후 결정</li>
-      <li><strong>스피드램핑 샷:</strong> VFX팀에 원속도(100%) 클릹으로 전달. 스피드 변경은 컨폼에서 적용</li>
+      <li class="lang ko"><strong>컬러본 수령 후:</strong> Dakota 효과 미적용 상태의 클린 타임라인으로 4444XQ MOV 출력 → VFX팀 전달</li>
+      <li class="lang en"><strong>After receiving colored footage:</strong> Export clean timeline without Dakota's effects as 4444XQ MOV → deliver to VFX team</li>
+      <li class="lang ko"><strong>Dakota 효과 데이터:</strong> Premiere 프로젝트 파일(또는 XML)로 줌/쉐이크/스피드램핑 데이터를 별도 보존 — 파이널 컨폼에서 사용</li>
+      <li class="lang en"><strong>Dakota's effect data:</strong> Preserve zoom/shake/speed ramp data as Premiere project file (or XML) — to be used in final conform</li>
+      <li class="lang ko"><strong>해상도:</strong> DQ/Giovi와 3840×2160 vs 4608×3164 협의 후 결정</li>
+      <li class="lang en"><strong>Resolution:</strong> Decide between 3840×2160 vs 4608×3164 after consulting with DQ/Giovi</li>
+      <li class="lang ko"><strong>스피드램핑 샷:</strong> VFX팀에 원속도(100%) 클립으로 전달. 스피드 변경은 컨폼에서 적용</li>
+      <li class="lang en"><strong>Speed ramp shots:</strong> Deliver to VFX team at original speed (100%). Speed changes applied in conform</li>
     </ul>
   </div>
 </div>
@@ -717,39 +867,71 @@
 <!-- ==================== TAB 3: COMPARISON ==================== -->
 <div id="tab-compare" class="tab-content">
 
-  <div class="section-title">워크플로우 비교</div>
-  <div class="section-subtitle">현재 방식 vs. 권장 방식 (Giovi 제안 수용)</div>
+  <div class="section-title">
+    <span class="lang ko">워크플로우 비교</span>
+    <span class="lang en">Workflow Comparison</span>
+  </div>
+  <div class="section-subtitle">
+    <span class="lang ko">현재 방식 vs. 권장 방식 (Giovi 제안 수용)</span>
+    <span class="lang en">Current Method vs. Recommended Method (Adopting Giovi's Proposal)</span>
+  </div>
 
   <div class="compare-grid">
     <div class="compare-box old">
-      <h4>❌ 현재 방식 (효과 적용 후 VFX)</h4>
+      <h4>
+        <span class="lang ko">❌ 현재 방식 (효과 적용 후 VFX)</span>
+        <span class="lang en">❌ Current Method (Effects Before VFX)</span>
+      </h4>
       <ol>
-        <li>현장편집 → Dakota 효과 추가</li>
-        <li>Relink → 클린 EDL 출력</li>
-        <li>컬러 그레이딩 (4608×3164)</li>
-        <li>컬런본에 <strong>효과 재적용</strong> → 4444XQ 출력</li>
-        <li style="color:#fca5a5;"><strong>VFX가 효과 적용된 상태에서 작업</strong></li>
-        <li>파이널 컨폼 → 둜리버리</li>
+        <li class="lang ko">현장편집 → Dakota 효과 추가</li>
+        <li class="lang en">On-set edit → Dakota adds effects</li>
+        <li class="lang ko">Relink → 클린 EDL 출력</li>
+        <li class="lang en">Relink → Clean EDL export</li>
+        <li class="lang ko">컬러 그레이딩 (4608×3164)</li>
+        <li class="lang en">Color grading (4608×3164)</li>
+        <li class="lang ko">컬러본에 <strong>효과 재적용</strong> → 4444XQ 출력</li>
+        <li class="lang en">Colored footage + <strong>effects re-applied</strong> → 4444XQ export</li>
+        <li class="lang ko" style="color:#fca5a5;"><strong>VFX가 효과 적용된 상태에서 작업</strong></li>
+        <li class="lang en" style="color:#fca5a5;"><strong>VFX works on footage WITH effects applied</strong></li>
+        <li class="lang ko">파이널 컨폼 → 딜리버리</li>
+        <li class="lang en">Final conform → Delivery</li>
       </ol>
     </div>
     <div class="compare-box new">
-      <h4>✅ 권장 방식 (클린 플레이트 → VFX → 컨폼)</h4>
+      <h4>
+        <span class="lang ko">✅ 권장 방식 (클린 플레이트 → VFX → 컨폼)</span>
+        <span class="lang en">✅ Recommended (Clean Plate → VFX → Conform)</span>
+      </h4>
       <ol>
-        <li>현장편집 → Dakota 효과 추가</li>
-        <li>Relink → 클린 EDL + 효과 데이터 별도 보존</li>
-        <li>컬러 그레이딩 (4608×3164)</li>
-        <li style="color:#6ee7b7;"><strong>클린 플레이트로 4444XQ 출력 (효과 없이)</strong></li>
-        <li style="color:#6ee7b7;"><strong>VFX 클린 플레이트 기반 작업</strong></li>
-        <li style="color:#fcd34d;"><strong>파이널 컨폼에서 효과 최종 적용</strong></li>
-        <li>딜리버리</li>
+        <li class="lang ko">현장편집 → Dakota 효과 추가</li>
+        <li class="lang en">On-set edit → Dakota adds effects</li>
+        <li class="lang ko">Relink → 클린 EDL + 효과 데이터 별도 보존</li>
+        <li class="lang en">Relink → Clean EDL + effect data preserved separately</li>
+        <li class="lang ko">컬러 그레이딩 (4608×3164)</li>
+        <li class="lang en">Color grading (4608×3164)</li>
+        <li class="lang ko" style="color:#6ee7b7;"><strong>클린 플레이트로 4444XQ 출력 (효과 없이)</strong></li>
+        <li class="lang en" style="color:#6ee7b7;"><strong>Clean plate 4444XQ export (no effects)</strong></li>
+        <li class="lang ko" style="color:#6ee7b7;"><strong>VFX 클린 플레이트 기반 작업</strong></li>
+        <li class="lang en" style="color:#6ee7b7;"><strong>VFX works on clean plates</strong></li>
+        <li class="lang ko" style="color:#fcd34d;"><strong>파이널 컨폼에서 효과 최종 적용</strong></li>
+        <li class="lang en" style="color:#fcd34d;"><strong>Effects applied in final conform</strong></li>
+        <li class="lang ko">딜리버리</li>
+        <li class="lang en">Delivery</li>
       </ol>
     </div>
   </div>
 
-  <div class="section-title" style="margin-top:50px;">해상도별 영향 분석</div>
-  <div class="section-subtitle">VFX 렌더시간 및 작업효율성에 미치는 영향</div>
+  <div class="section-title" style="margin-top:50px;">
+    <span class="lang ko">해상도별 영향 분석</span>
+    <span class="lang en">Resolution Impact Analysis</span>
+  </div>
+  <div class="section-subtitle">
+    <span class="lang ko">VFX 렌더시간 및 작업효율성에 미치는 영향</span>
+    <span class="lang en">Impact on VFX Render Time and Work Efficiency</span>
+  </div>
 
-  <table class="res-table">
+  <!-- Korean Table -->
+  <table class="res-table lang ko">
     <thead>
       <tr>
         <th>항목</th>
@@ -769,19 +951,19 @@
         <td>렌더 시간 (예상)</td>
         <td class="bad">기준 (1x)</td>
         <td class="good">~0.57x</td>
-        <td>항셀 비례 단숈 계산</td>
+        <td>픽셀 비례 단순 계산</td>
       </tr>
       <tr>
         <td>디스크 용량</td>
-        <td class="bad">훈</td>
+        <td class="bad">큼</td>
         <td class="good">약 43% 절약</td>
         <td>4444XQ 기준</td>
       </tr>
       <tr>
-        <td>최종 둜리버리 품지</td>
+        <td>최종 딜리버리 품질</td>
         <td>4K+ 여유</td>
         <td>4K 정확 fit</td>
-        <td>최종이 3840 이면 차이 없음</td>
+        <td>최종이 3840이면 차이 없음</td>
       </tr>
       <tr>
         <td>줌/리프레임 여유</td>
@@ -792,18 +974,68 @@
     </tbody>
   </table>
 
+  <!-- English Table -->
+  <table class="res-table lang en">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>4608×3164 (Original)</th>
+        <th>3840×2160 (UHD)</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Pixel Count</td>
+        <td>~14.6M</td>
+        <td>~8.3M</td>
+        <td class="highlight">UHD is 43% less</td>
+      </tr>
+      <tr>
+        <td>Render Time (Est.)</td>
+        <td class="bad">Baseline (1x)</td>
+        <td class="good">~0.57x</td>
+        <td>Simple pixel-proportional calc</td>
+      </tr>
+      <tr>
+        <td>Disk Space</td>
+        <td class="bad">Large</td>
+        <td class="good">~43% savings</td>
+        <td>Based on 4444XQ</td>
+      </tr>
+      <tr>
+        <td>Final Delivery Quality</td>
+        <td>4K+ headroom</td>
+        <td>4K exact fit</td>
+        <td>No difference if final is 3840</td>
+      </tr>
+      <tr>
+        <td>Zoom/Reframe Headroom</td>
+        <td class="good">Available (~120%)</td>
+        <td class="bad">None (1:1)</td>
+        <td>Original is better when zoom applied in conform</td>
+      </tr>
+    </tbody>
+  </table>
+
   <div class="alert-box info" style="max-width:860px; margin:30px auto; padding:20px 26px;">
-    <h3>📐 해상도 결정 가이드</h3>
+    <h3 class="lang ko">📐 해상도 결정 가이드</h3>
+    <h3 class="lang en">📐 Resolution Decision Guide</h3>
     <ul>
-      <li><strong>Dakota의 줌 정도가 큰 샷이 많다면:</strong> VFX도 4608×3164로 작업하는 것이 안전. 컨폼에서 줌 적용 시 해상도 손실 없음.</li>
-      <li><strong>줌이 미미하거나 대부분 쉘이크/스피드램핑 위주라면:</strong> 3840×2160으로 VFX 작업해도 무방. 렌더시간 대폭 절약.</li>
-      <li><strong>절충안:</strong> 줌이 큰 VFX 샷만 4608 기준, 나머지는 3840 기준 — 샷별 분류 필요.</li>
+      <li class="lang ko"><strong>Dakota의 줌 정도가 큰 샷이 많다면:</strong> VFX도 4608×3164로 작업하는 것이 안전. 컨폼에서 줌 적용 시 해상도 손실 없음.</li>
+      <li class="lang en"><strong>If many shots have significant zoom from Dakota:</strong> Safer to work VFX at 4608×3164. No resolution loss when zoom is applied in conform.</li>
+      <li class="lang ko"><strong>줌이 미미하거나 대부분 쉐이크/스피드램핑 위주라면:</strong> 3840×2160으로 VFX 작업해도 무방. 렌더시간 대폭 절약.</li>
+      <li class="lang en"><strong>If zoom is minimal and mostly shake/speed ramping:</strong> Working VFX at 3840×2160 is fine. Significantly saves render time.</li>
+      <li class="lang ko"><strong>절충안:</strong> 줌이 큰 VFX 샷만 4608 기준, 나머지는 3840 기준 — 샷별 분류 필요.</li>
+      <li class="lang en"><strong>Compromise:</strong> Only heavy-zoom VFX shots at 4608, rest at 3840 — requires per-shot classification.</li>
     </ul>
   </div>
 
   <div class="alert-box success" style="max-width:860px; margin:20px auto 60px; padding:20px 26px;">
-    <h3>🎯 Giovi에게 회신 요약</h3>
-    "Yes — we'll deliver clean plates to VFX without the zoom/shake/speed ramp effects. Jin-hyuk will output the colored footage as clean 4444XQ MOVs, and we'll preserve Dakota's effect data separately. The zoom, camera shake, and speed ramp will be re-applied in the final conform stage after VFX is completed. Let's align on the resolution — are you okay with 3840×2160 for VFX plates, or do you need the full 4608×3164 for shots with significant reframing?"
+    <h3 class="lang ko">🎯 Giovi에게 회신 요약</h3>
+    <h3 class="lang en">🎯 Reply Summary for Giovi</h3>
+    <p class="lang ko" style="margin-top:4px;">"Yes — we'll deliver clean plates to VFX without the zoom/shake/speed ramp effects. Jin-hyuk will output the colored footage as clean 4444XQ MOVs, and we'll preserve Dakota's effect data separately. The zoom, camera shake, and speed ramp will be re-applied in the final conform stage after VFX is completed. Let's align on the resolution — are you okay with 3840×2160 for VFX plates, or do you need the full 4608×3164 for shots with significant reframing?"</p>
+    <p class="lang en" style="margin-top:4px;">"Yes — we'll deliver clean plates to VFX without the zoom/shake/speed ramp effects. Jin-hyuk will output the colored footage as clean 4444XQ MOVs, and we'll preserve Dakota's effect data separately. The zoom, camera shake, and speed ramp will be re-applied in the final conform stage after VFX is completed. Let's align on the resolution — are you okay with 3840×2160 for VFX plates, or do you need the full 4608×3164 for shots with significant reframing?"</p>
   </div>
 
 </div>
@@ -813,11 +1045,22 @@
 </div>
 
 <script>
-function switchTab(tab) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(el) { el.classList.remove('active'); });
   document.getElementById('tab-' + tab).classList.add('active');
-  event.target.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function switchLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(function(el) { el.classList.remove('active'); });
+  if (lang === 'en') {
+    document.body.classList.add('en');
+    document.querySelectorAll('.lang-btn')[1].classList.add('active');
+  } else {
+    document.body.classList.remove('en');
+    document.querySelectorAll('.lang-btn')[0].classList.add('active');
+  }
 }
 </script>
 
